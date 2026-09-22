@@ -78,6 +78,7 @@ introduction-cientific-programming/
 │   └── resultados_vih_santiago.xlsx
 └── notebooks/
     ├── analisis_dinamica_temporal_juanes.ipynb  # Pipeline completo + Dinámica Temporal y Efecto Pandemia
+    ├── modelo_prediccion_juanes.ipynb           # Modelo Supervisado: Predicción de Retraso Diagnóstico Prolongado
     ├── analisis_santiago.ipynb                  # Análisis sociodemográfico general
     └── analisis_descriptivo.ipynb
 ```
@@ -85,6 +86,15 @@ introduction-cientific-programming/
 ---
 
 ## 4. Notebooks y Análisis
+
+### [`modelo_prediccion_juanes.ipynb`](notebooks/modelo_prediccion_juanes.ipynb)
+- **Autor:** Juanes
+- **Enfoque:**
+  - **Problema formal:** Predicción supervisada de detección tardía / retraso diagnóstico prolongado ($y = 1$ si $\Delta t > 30\text{ días}$).
+  - **Control de fuga de datos (*Data Leakage*):** Aislamiento de variables que calculan o suceden al target mediante `Pipeline` y `ColumnTransformer`.
+  - **Partición temporal honesta:** Entrenamiento con años históricos (2012–2020) y evaluación estricta en el periodo post-pandemia (2021–2023).
+  - **Modelos:** Comparación rigurosa entre **Modelo Nulo (*Dummy Baseline*)**, **Regresión Logística interpretable (*Odds Ratios*)** y **Random Forest**.
+  - **Inferencia:** Función de simulación para evaluar el riesgo de pacientes nuevos según estrato, comuna y aseguramiento.
 
 ### [`analisis_dinamica_temporal_juanes.ipynb`](notebooks/analisis_dinamica_temporal_juanes.ipynb)
 - **Autor:** Juanes
