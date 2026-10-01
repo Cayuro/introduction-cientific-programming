@@ -1,0 +1,24 @@
+# GREEDY explicaciones
+## lemonade change
+Aquí lo que se buscaba hacer era devolver a cada uno de los usuarios la cantidad que le correpsonde entregando siempre que fuera posible y necesario billetes más grandes y luego disminuyendo 
+![Accepted - primera solución válida](lemonade-change.png)
+![código de solución javascript](lemonade-change-code.png)
+
+en este algoritmo se puede ver que se va a ir restando el valor de cada billete que se entrega y se va a ir sumando el valor de cada billete que se recibe, para esto hago un mapa en donde agrego cada billete que se recibe y luego hago la logica de restar los billetes que tocaría entregar, lo primero es cuando no hay cambio para evitar hacer operaciones si sé que no habrá cambio.
+
+aquí no es muy optimo pero funciona, el problema es que se está almacenando en un map y pues almaceno incluso los de 20, luego al pensarlo mejor entiendo que realmente no se requiere almacenar sino solamente dos valores. y ahí es cuando aplico optimización continuando como greedy, basicamente ahora lo que hago es almacenar en una variable la cantidad de billetes de 5 y de diez que hay en tontal ahí es cuando entra:
+![Javascript - solución optimizando un poco](lemonade-upgrade-code.png)
+
+en este simplemente uso variables y dentro del ciclo evaluo que billete entra, los de 5 no tengo que validar nada sino que los ingreso al sistema, los de 10 o 20 tengo que verificar que hayan billetes de 5 para devolver, entocnes los de 10 si tengo de 5, resto 1 a la variable que me guarda la cantidad de billetes de 5 y sumo 1 a la variable que me guarda los billetes de 10. 
+
+cuando entran los de 20 toca priorizar dar los billetes de 10, por eso el primer cambio posible es 10 y 5 y si no hay tocaría dar 3 billetes de 5, y ya si no hay simplemente sería al final falso.
+
+Finalmente el algoritmo es greedy porque siempre se busca dar el cambio con los billetes más grandes posibles, y si no hay, se da con los más pequeños y después de esto trato de optimizar haciendolo con java que es el lenguaje que más manejo, aunque sigue siendo muy similar la lógica.
+
+![Java Versión, mejor en rendimiento y espacio](lemonade-java-mejorado.png)
+
+finalmente esta es la solución que más me gusta, bajo la misma lógica guardo solo billetes de 5 y de 10 que son los que me sirven para dar cambio, hago un for each para que me devuelva directamente el elemento, ese bill podría interpretarse como el pago que hace la persona y que está almacenado en los pagos o facturas bills, lo primero si es 5 entonces aumento la variable de 5, si es 10 entonces verifico que haya billetes de 5 para dar cambio y si es 20 primero verifico que haya billetes de 10 y de 5 para dar el cambio, si no hay entonces verifico que haya al menos 3 billetes de 5 para dar el cambio, si no hay tampoco entonces retorno falso.
+
+en caso de que en ningun momento se haya retornado falso, así como en todos los otros, sale del ciclo aquí es donde sabemos que se cumplio que a todos se les dió cambio y por ende devolvemos true.
+
+
