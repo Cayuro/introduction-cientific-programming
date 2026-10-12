@@ -22,7 +22,27 @@ You have 3 cookies and their sizes are big enough to gratify all of the children
 You need to output 2.
 """
 """
-La solución fue la sigueinte:
+La solución fue la siguiente:
+
+Explicación del código:
+
+1. i = 0 y j = 0: 
+   Son nuestros "punteros" o índices que nos ayudan a recorrer la lista de los niños (g) y la de las galletas (s) desde el principio.
+
+2. g.sort() y s.sort(): 
+   Ordenan ambas listas de menor a mayor. Esto es clave para la estrategia ávida (greedy), ya que nos permite comparar siempre al niño menos exigente con la galleta más pequeña disponible.
+
+3. while i < len(g) and j < len(s): 
+   El ciclo se ejecuta únicamente mientras todavía queden niños por atender Y galletas por probar en la bandeja.
+
+4. if s[j] >= g[i]: 
+   Preguntamos si el tamaño de la galleta actual es mayor o igual a la exigencia del niño. Si es así, el niño queda contento y avanzamos al siguiente niño sumando i += 1.
+
+5. j += 1: 
+   Independientemente de si la galleta le sirvió al niño o si era muy pequeña y se descartó, esa galleta ya se usó, por lo que siempre avanzamos a la siguiente galleta.
+
+6. return i: 
+   Como la variable 'i' aumenta de uno en uno cada vez que un niño recibe su galleta, al final del ciclo su valor representa exactamente el número total de niños contentos.
 """
 class Solution:
     def findContentChildren(self, g: list[int], s: list[int]) -> int:
