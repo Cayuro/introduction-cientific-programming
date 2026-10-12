@@ -79,6 +79,8 @@ introduction-cientific-programming/
 └── notebooks/
     ├── analisis_dinamica_temporal_juanes.ipynb  # Pipeline completo + Dinámica Temporal y Efecto Pandemia
     ├── modelo_prediccion_juanes.ipynb           # Modelo Supervisado: Predicción de Retraso Diagnóstico Prolongado
+    ├── modelo_prediccion_santiago.ipynb         # Modelo Supervisado: Predicción de Hospitalización y Severidad
+    ├── tarea2_colab_santiago.ipynb              # Tarea 2: Cuaderno adaptado para Google Colab + LeetCode
     ├── analisis_santiago.ipynb                  # Análisis sociodemográfico general
     └── analisis_descriptivo.ipynb
 ```
@@ -104,13 +106,34 @@ introduction-cientific-programming/
   - **Cuantificación del Efecto Pandemia (COVID-19):** Diagnóstico del choque en 2020 y la dinámica de recuperación en 2021–2022.
   - **Retraso Diagnóstico:** Cálculo del tiempo transcurrido entre la aparición de síntomas y la atención médica ($\Delta t = \text{Fecha Consulta} - \text{Fecha Inicio Síntomas}$) según régimen de salud.
 
-### [`analisis_santiago.ipynb`](notebooks/analisis_santiago.ipynb)
-- **Autor:** Santiago
-- **Enfoque:** Exploración inicial de proporciones por sexo, distribución por edades y principales comunas con mayor volumen de casos.
+### [`modelo_prediccion_santiago.ipynb`](notebooks/modelo_prediccion_santiago.ipynb) / [`tarea2_colab_santiago.ipynb`](notebooks/tarea2_colab_santiago.ipynb)
+- **Autor:** Santiago García
+- **Enfoque:** Predicción de Severidad Clínica y Riesgo de Hospitalización (`pac_hos_`) mediante Árbol de Decisión Ponderado y Gradient Boosting, complementado con simulador de triaje y sección de talleres algorítmicos (LeetCode).
 
 ---
 
-## 5. Instalación y Uso
+## 5. Tarea 2 · Primer Análisis en Google Colab (Santiago García)
+
+- **Entregable:** Cuaderno reproducible en Google Colab ejecutado de principio a fin (`Runtime -> Run all`).
+- **Enlace al Google Colab:** [Abrir Cuaderno en Google Colab](https://colab.research.google.com/drive/1vkI6g7LfTPUzSHwmqqt7VrXzsLsVMQXD?usp=sharing) *(Reemplazar con el enlace de Colab generado tras compartir)*.
+- **Permisos de Colab:**
+  - Compartido con: `alejandro.salgar@gmail.com` (permiso de **Lector**).
+  - Acceso general: **Cualquiera que tenga el enlace $\rightarrow$ Lector**.
+- **Ficha Técnica del Dataset:**
+  - **Nombre y Fuente:** Casos de VIH/SIDA SIVIGILA Medellín (2012–2023), Portal de Datos Abiertos de la Alcaldía de Medellín / INS.
+  - **Dimensiones:** 15.470 filas y 116 columnas.
+  - **Problema en una oración:** *Anticipar si un paciente diagnosticado con VIH/SIDA requerirá hospitalización clínica urgente frente a manejo ambulatorio al momento de su notificación epidemiológica.*
+  - **Variable Objetivo ($y$):** Variable dicotómica derivada de `pac_hos_` ($y = 1$ si hospitalizado, $y = 0$ si ambulatorio).
+- **Estructura del Notebook:**
+  1. Lectura con URL pública directa y control de centinelas (`na_values`).
+  2. Parseo semántico de fechas con auditoría de pérdidas (`perdidos_en_parseo`) y reglas cronológicas.
+  3. Visualización con preguntas analíticas como títulos.
+  4. Modelado supervisado con aislamiento de fuga de datos (*Data Leakage*), *Dummy Baseline*, Árbol Ponderado y *Gradient Boosting*.
+  5. Espacio reservado para talleres algorítmicos desarrollados en **LeetCode**.
+
+---
+
+## 6. Instalación y Uso
 
 1. Clonar el repositorio y acceder a la carpeta:
    ```bash
@@ -139,5 +162,5 @@ introduction-cientific-programming/
 ## 6. Autores
 
 - **Juanes** ([`analisis_dinamica_temporal_juanes.ipynb`](notebooks/analisis_dinamica_temporal_juanes.ipynb))
-- **Santiago** ([`analisis_santiago.ipynb`](notebooks/analisis_santiago.ipynb))
+- **Santiago García** ([`modelo_prediccion_santiago.ipynb`](notebooks/modelo_prediccion_santiago.ipynb) / [`tarea2_colab_santiago.ipynb`](notebooks/tarea2_colab_santiago.ipynb))
 - **Equipo de Introducción a la Programación Científica — 2026-2**
