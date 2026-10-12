@@ -115,7 +115,7 @@ introduction-cientific-programming/
 ## 5. Tarea 2 · Primer Análisis en Google Colab (Santiago García)
 
 - **Entregable:** Cuaderno reproducible en Google Colab ejecutado de principio a fin (`Runtime -> Run all`).
-- **Enlace al Google Colab:** [Abrir Cuaderno en Google Colab](https://colab.research.google.com/github/Cayuro/introduction-cientific-programming/blob/main/notebooks/tarea2_colab_santiago.ipynb) *(Reemplazar con el enlace de Colab generado tras compartir)*.
+- **Enlace al Google Colab:** [Abrir Cuaderno en Google Colab](https://colab.research.google.com/drive/1vkI6g7LfTPUzSHwmqqt7VrXzsLsVMQXD?usp=sharing) *(Reemplazar con el enlace de Colab generado tras compartir)*.
 - **Permisos de Colab:**
   - Compartido con: `alejandro.salgar@gmail.com` (permiso de **Lector**).
   - Acceso general: **Cualquiera que tenga el enlace $\rightarrow$ Lector**.
