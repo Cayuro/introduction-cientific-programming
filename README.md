@@ -164,3 +164,7 @@ introduction-cientific-programming/
 - **Juanes** ([`analisis_dinamica_temporal_juanes.ipynb`](notebooks/analisis_dinamica_temporal_juanes.ipynb))
 - **Santiago García** ([`modelo_prediccion_santiago.ipynb`](notebooks/modelo_prediccion_santiago.ipynb) / [`tarea2_colab_santiago.ipynb`](notebooks/tarea2_colab_santiago.ipynb))
 - **Equipo de Introducción a la Programación Científica — 2026-2**
+
+
+https://colab.research.google.com/drive/1JCcmZwDbDo1WVcfA-BH1NycaKkaySFUp#scrollTo=d8d44fb9
+
