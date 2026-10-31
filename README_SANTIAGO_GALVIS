@@ -1,0 +1,26 @@
+
+Repositorio de actividades y proyectos del curso de programación científica.
+
+
+Notebook de análisis exploratorio y clasificación con el conjunto de datos **SIVIGILA VIH**.
+
+[**Abrir notebook en Google Colab**](https://colab.research.google.com/drive/1fmsSzgSpXPBUO0UdmkGoyA_AkS2183Li?usp=sharing)
+
+
+- Carga y exploración del conjunto de datos.
+- Limpieza y revisión de valores faltantes, duplicados y posibles inconsistencias.
+- Análisis exploratorio mediante gráficos.
+- Preparación de variables y división de datos en entrenamiento y prueba.
+- Comparación de un modelo baseline con un árbol de decisión.
+
+
+El árbol de decisión identificó aproximadamente el 66 % de los registros de la clase minoritaria en el conjunto de prueba. Los resultados son exploratorios y no deben utilizarse para tomar decisiones clínicas.
+
+
+Por tratarse de información relacionada con salud, el archivo CSV no se publica en este repositorio. El notebook espera encontrar `sivigila_vih.csv` en la carpeta `Proyecto_SIVIGILA` de Google Drive.
+
+Para ejecutar el notebook, se debe:
+1. Tener acceso al notebook de Colab.
+2. Contar con autorización para acceder al archivo de datos.
+3. Ubicar el archivo en la ruta de Google Drive indicada en el código.
+
