@@ -1,17 +1,17 @@
-# Taller de Grafos · Problema 4.3: Transbordos y minutos
+# Taller de Grafos · Transbordos y minutos
 **Curso:** Introducción a la Programación Científica — Periodo 2026-2  
 **Estudiante:** Santiago García  
 **Fecha de entrega:** Miércoles 18 de noviembre de 2026  
 **Entregables:**
 1. Archivo interactivo autónomo: [`transbordos_y_minutos-SantiagoGarcia.html`](transbordos_y_minutos-SantiagoGarcia.html) (también disponible en [`grafos/index.html`](grafos/index.html)).
-2. Video explicativo de 4 a 6 minutos demostrando la ejecución del laboratorio interactivo.
+2. Video de 4 a 6 minutos demostrando la ejecución del laboratorio interactivo y explicando el algoritmo.
 
 ---
 
 ## 1. Planteamiento del Problema
 
-### Enunciado formal (Problema 4.3)
-> Una red pequeña de bus, metro o cable. Las estaciones son los vértices. Cambiar de línea o tomar un tramo directo es seguir una arista. Cada tramo dura unos minutos, siempre un número positivo.  
+### Enunciado formal
+> Una red de transporte urbano (metro, cable y tranvía). Las estaciones son los vértices. Cambiar de línea o tomar un tramo directo es seguir una arista. Cada tramo dura unos minutos, siempre un número positivo.  
 > **Pregunta:** ¿Qué ruta hace menos transbordos? ¿Qué ruta tarda menos minutos?  
 > **Algoritmos:** BFS para los transbordos. Dijkstra para los minutos.  
 > **Qué se ve:** Un par origen–destino en el que la ruta de menos transbordos tarda más. Los dos tiempos quedan expresados en minutos.
@@ -148,26 +148,25 @@ print(f"Ruta Dijkstra (Menos minutos): {ruta_dij} en {tiempo} minutos")
 
 ---
 
-## 5. Guion Estructurado para el Video Explicativo (4 a 6 Minutos)
+## 5. Guion de Apoyo para la Grabación del Video (4 a 6 Minutos)
 
-Para grabar el video en pantalla mostrando [`transbordos_y_minutos-SantiagoGarcia.html`](transbordos_y_minutos-SantiagoGarcia.html):
+> **Nota para Santiago:** Este guion es tu guía personal de apoyo detrás de cámaras. Mientras grabas tu pantalla mostrando la presentación HTML, puedes apoyarte en esta secuencia:
 
-| Tiempo | Sección | Qué mostrar y qué decir |
+| Tiempo | Diapositiva en Pantalla | Qué decir y enfatizar |
 | :---: | :--- | :--- |
-| **0:00 - 1:00** | **Portada y Pregunta** | Mostrar Slide 0 y Slide 1. Decir: *"Buenas tardes, mi nombre es Santiago García, estudiante de Introducción a la Programación Científica. Presento la solución al Problema 4.3: Transbordos y minutos. La pregunta en una oración es: ¿Qué ruta realiza el menor número de transbordos y qué ruta tarda el menor tiempo en minutos desde Terminal Norte hasta Hospital Universitario, y por qué difieren?"* |
-| **1:00 - 2:00** | **Grafo y Adyacencia** | Pasar a Slide 2. Explicar los 8 vértices ($A$ a $H$) y las 13 aristas con sus tiempos en minutos. Mostrar la tabla de adyacencia y destacar las tres tecnologías de transporte: Metro férreo (azul), Metrocable (naranja) y Tranvía (verde). Confirmar que todos los pesos son positivos ($w > 0$). |
-| **2:00 - 4:00** | **Laboratorio en Vivo** | Pasar a Slide 4 (Laboratorio). Seleccionar origen $A$ y destino $H$.<br>1. **Ejecutar BFS:** Mostrar cómo la cola FIFO procesa nivel a nivel; descubre $B$, $C$ y $F$ a 1 tramo, y desde $B$ salta a $H$ en solo 2 tramos.<br>2. **Cambiar a Dijkstra:** Mostrar la cola de prioridad (`pq`); cómo avanza por los tramos rápidos de metro ($C$ a 3 min, $F$ a 6 min, $D$ a 7 min, $E$ a 10 min) y confirma $H$ en solo 14 minutos antes de que el cable siquiera termine. |
-| **4:00 - 5:15** | **Comparación y Respuesta** | Pasar a Slide 5. Mostrar las dos rutas lado a lado en los minimapas.<br>- Ruta BFS: $A \to B \to H$ (**2 tramos, 35 minutos**).<br>- Ruta Dijkstra: $A \to C \to D \to E \to H$ (**4 tramos, 14 minutos**).<br>Explicar la causa matemática: BFS asume pesos iguales (1 por arista), mientras que Dijkstra optimiza el costo ponderado real. |
-| **5:15 - 6:00** | **Código Python y Cierre** | Pasar a Slide 6 y 7. Mostrar la implementación en Python con `deque` y `heapq`. Concluir con la lección de ingeniería de transporte: *a veces hacer transbordos en modos veloces ahorra más de la mitad del tiempo de viaje*. |
+| **0:00 - 1:00** | **Slide 0 (Inicio) y Slide 1 (El problema)** | *"Buenas tardes, mi nombre es Santiago García, estudiante del curso de Introducción a la Programación Científica periodo 2026-2. En este taller de grafos abordaremos el problema de transbordos y minutos en una red intermodal de transporte urbano. La pregunta central en una sola oración es: ¿Qué ruta realiza el menor número de transbordos y qué ruta tarda el menor tiempo en minutos desde Terminal Norte hasta Hospital Universitario, y por qué difieren?"* |
+| **1:00 - 2:00** | **Slide 2 (Grafo y adyacencia)** | *"Aquí observamos nuestro grafo propio compuesto por 8 estaciones, desde la A hasta la H, con 13 conexiones bidireccionales. Modelamos tres tecnologías con dinámicas reales: la línea férrea de Metro en azul de alta velocidad (3 a 4 minutos por tramo), el Metrocable en naranja sobre ladera montañosa (11 a 18 minutos) y el Tranvía en verde (5 a 10 minutos). La tabla de adyacencia refleja con exactitud cada peso positivo."* |
+| **2:00 - 4:00** | **Slide 4 (Laboratorio Interactivo)** | Poner en marcha la simulación interactiva:<br>1. **Conmutar a BFS:** *"Primero evaluamos BFS. Observamos cómo la cola FIFO explora por niveles de saltos: desde Terminal Norte A encola a B, C y F a 1 salto. En el siguiente paso, desde B alcanza directamente el destino H en solo 2 tramos. BFS concluye que la ruta con menos transbordos es A → B → H con 2 tramos (1 transbordo), pero tarda 35 minutos."*<br>2. **Conmutar a Dijkstra:** *"Ahora pasamos a Dijkstra. Aquí entra en juego la cola de prioridad ordenada por tiempo. Vemos cómo Dijkstra prioriza avanzar por los tramos rápidos de Metro: confirma C a 3 min, F a 6 min, D a 7 min, E a 10 min y finalmente confirma Hospital Universitario en solo 14 minutos, descartando el tramo lento de Metrocable."* |
+| **4:00 - 5:15** | **Slide 5 (Comparación y respuesta)** | *"En esta vista comparativa tenemos las dos respuestas frente a frente:<br>- La ruta de menos transbordos (BFS) es Terminal Norte → Cable Mirador → Hospital Universitario, con 2 tramos pero un tiempo de 35 minutos.<br>- La ruta de menor tiempo (Dijkstra) es Terminal Norte → Parque Universidad → Estación Central → Distrito Tecnológico → Hospital Universitario, con 4 tramos pero tan solo 14 minutos.<br>¿Por qué no son iguales? Porque BFS optimiza la cantidad de aristas asumiendo costo unitario, mientras que Dijkstra optimiza el tiempo continuo real ponderado, logrando un ahorro de 21 minutos (más del 60% más rápido)."* |
+| **5:15 - 6:00** | **Slide 6 (Python) y Slide 7 (Conclusiones)** | *"Finalmente, implementamos estos algoritmos en Python 3 utilizando deque para la cola FIFO de BFS y heapq para el Min-Heap de Dijkstra. Como conclusión técnica, demostramos que en sistemas de transporte masivo la velocidad operativa y la segregación de vías tienen mayor impacto que la cantidad de transbordos. Muchas gracias."* |
 
 ---
 
-## 6. Verificación de Criterios del Taller
+## 6. Verificación de Criterios
 
-- [x] **Problema:** Uno de los 10 enunciados oficiales (4.3 Transbordos y minutos).
-- [x] **Pregunta:** Formulada con exactitud en una sola oración.
 - [x] **Grafo:** Propio, de 8 vértices (rango permitido: 6 a 14), con pesos positivos y lista de adyacencia idéntica al dibujo.
-- [x] **Algoritmos:** BFS cuenta tramos/transbordos; Dijkstra minimiza minutos continuos reales.
-- [x] **Respuesta y comparación:** Ambas rutas calculadas, con unidades exactas (tramos y minutos) y justificación de su divergencia.
+- [x] **Pregunta:** Expresada en una sola oración concisa.
+- [x] **Algoritmos:** BFS cuenta transbordos/tramos; Dijkstra minimiza minutos continuos reales.
+- [x] **Respuesta y comparación:** Ambas rutas calculadas, con unidades exactas (tramos y minutos) y justificación clara.
 - [x] **Archivo HTML:** 100% autónomo, abre con doble clic sin internet ni librerías externas, controles interactivos funcionando.
-- [x] **Código Python:** Modelado profesional con `collections.deque` y `heapq`.
+- [x] **Código Python:** Modelado formal con `collections.deque` y `heapq`.

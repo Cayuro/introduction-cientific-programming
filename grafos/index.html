@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Problema 4.3: Transbordos y minutos · Taller de Grafos · Santiago García</title>
+<title>Grafos · Transbordos y minutos · Santiago García</title>
 <style>
   :root {
     --ink: #0f172a;
@@ -578,7 +578,7 @@
   <header class="top">
     <div class="brand">
       <span class="tag">Grafos 2026-2</span>
-      <span>Taller de Grafos · Problema 4.3</span>
+      <span>Taller de Grafos · Transbordos y minutos</span>
       <span class="title-crumb" id="header-crumb">/ Inicio</span>
     </div>
     <div class="top-meta">
@@ -612,12 +612,12 @@
             <div class="hero-card">
               <h3 style="margin-bottom:8px;">Ficha técnica del problema</h3>
               <ul style="font-size:13px; line-height:1.7; color:var(--muted); padding-left:18px; margin:0 0 16px;">
-                <li><b>Problema:</b> 4.3 (Transbordos y minutos)</li>
+                <li><b>Tema:</b> Grafos (Transbordos y minutos)</li>
                 <li><b>Estudiante:</b> Santiago García</li>
                 <li><b>Grafo propio:</b> 8 estaciones intermodales conectadas</li>
                 <li><b>Líneas modeladas:</b> Metro férreo, Metrocable de montaña y Tranvía</li>
                 <li><b>Pregunta formal:</b> Comparación estricta entre BFS y Dijkstra</li>
-                <li><b>Duración sugerida del video:</b> 4 a 6 minutos</li>
+                <li><b>Entregable:</b> Visualización autónoma interactiva</li>
               </ul>
               <div style="background:#f1f5f9; padding:10px 14px; border-radius:8px; font-size:12px; color:var(--ink);">
                 <b>Veredicto anticipado:</b><br>
@@ -635,7 +635,7 @@
     <section class="slide" data-title="El problema">
       <div class="wrap">
         <p class="kicker">Enunciado formal</p>
-        <h2>Problema 4.3: Transbordos y minutos.</h2>
+        <h2>Grafos: Transbordos y minutos.</h2>
         <div class="grid-2">
           <div>
             <div class="card alert" style="margin-bottom:16px;">
@@ -983,33 +983,33 @@ def dijkstra_minutos(grafo, origen, destino):
       </div>
     </section>
 
-    <!-- SLIDE 7: GUION PARA VIDEO Y CIERRE -->
-    <section class="slide" data-title="Cierre y video">
+    <!-- SLIDE 7: CONCLUSIONES Y PREGUNTAS CLAVE -->
+    <section class="slide" data-title="Conclusiones">
       <div class="wrap">
-        <p class="kicker">Guion y preparación del entregable</p>
-        <h2>Estructura del video explicativo (4 a 6 minutos).</h2>
+        <p class="kicker">Análisis Técnico y Cierre</p>
+        <h2>Conclusiones y Preguntas Clave.</h2>
         <p class="lede">
-          Secuencia cronometrada recomendada para la grabación del video sobre este mismo archivo HTML:
+          Reflexiones fundamentales sobre optimización de rutas y comportamiento de los algoritmos en redes de transporte:
         </p>
 
-        <button type="button" class="qa"><b>Minuto 0:00 - 1:00 · Portada y La Pregunta en una oración</b> <span>+</span></button>
+        <button type="button" class="qa"><b>1. ¿Por qué BFS no puede encontrar la ruta más rápida en tiempo?</b> <span>+</span></button>
         <div class="answer">
-          Presentarse: <i>«Mi nombre es Santiago García, estudiante de Introducción a la Programación Científica periodo 2026-2. Presento el Problema 4.3: Transbordos y minutos. La pregunta central es: ¿Qué ruta realiza el menor número de transbordos y qué ruta tarda el menor tiempo en minutos desde Terminal Norte hasta Hospital Universitario, y por qué difieren?»</i>
+          Porque BFS opera bajo el supuesto de que todas las aristas tienen el mismo costo unitario (\(w = 1\)). Su objetivo matemático es minimizar saltos discretos (en este caso, transbordos). Al ser ciego a las unidades continuas (minutos reales), prioriza el camino de 2 tramos por el cable de montaña sin advertir que es un sistema lento de ladera.
         </div>
 
-        <button type="button" class="qa"><b>Minuto 1:00 - 2:00 · El Grafo propio y la Lista de Adyacencia</b> <span>+</span></button>
+        <button type="button" class="qa"><b>2. ¿Por qué Dijkstra confirma estaciones que no forman parte de la ruta final?</b> <span>+</span></button>
         <div class="answer">
-          Explicar los 8 vértices (estaciones intermodales A a H), las 13 aristas y sus tres tipologías (Metro rápido en azul, Metrocable en naranja y Tranvía en verde). Mostrar la tabla de adyacencia y confirmar que coincide perfectamente con el dibujo.
+          Porque Dijkstra propaga una onda radial basada estrictamente en la menor distancia acumulada desde el origen. Estaciones como Portal Occidente (6 min) o Bulevar Comercial (12 min) se confirman antes que Hospital Universitario (14 min) debido a su cercanía física al origen, aunque el camino óptimo hacia el destino final no las utilice.
         </div>
 
-        <button type="button" class="qa"><b>Minuto 2:00 - 4:00 · Laboratorio Interactivo en marcha (BFS y Dijkstra)</b> <span>+</span></button>
+        <button type="button" class="qa"><b>3. ¿Cuál es la lección de ingeniería y toma de decisiones en transporte?</b> <span>+</span></button>
         <div class="answer">
-          Poner a reproducir primero BFS: señalar cómo la cola FIFO explora nivel por nivel, saltando a B y llegando a H en solo 2 tramos. Luego cambiar a Dijkstra: mostrar cómo la cola de prioridad extrae primero los nodos más rápidos (C a 3 min, F a 6 min, D a 7 min, E a 10 min) y relaja H a 14 min mucho antes de que la línea de cable termine.
+          En logística y movilidad urbana, asumir el "costo" de 2 transbordos adicionales en una línea férrea segregada de alta velocidad ahorra más del 60% del tiempo total de viaje frente a una conexión directa lenta (14 minutos vs. 35 minutos). La topología y la velocidad operativa pesan más que la cantidad de transbordos.
         </div>
 
-        <button type="button" class="qa"><b>Minuto 4:00 - 5:30 · Comparación, Respuesta y Conclusiones</b> <span>+</span></button>
+        <button type="button" class="qa"><b>4. Complejidad algorítmica y escalabilidad</b> <span>+</span></button>
         <div class="answer">
-          Mostrar la diapositiva de comparación. Dar las respuestas en sus unidades exactas: Ruta BFS = 2 tramos y 35 min; Ruta Dijkstra = 4 tramos y 14 min. Explicar técnicamente que BFS asume pesos unitarios (1 por arista), mientras que Dijkstra optimiza el tiempo continuo real ponderado.
+          BFS presenta una complejidad temporal de \(\mathcal{O}(V + E)\), ideal para análisis topológicos no ponderados. Dijkstra implementado con cola de prioridad (Min-Heap) opera en \(\mathcal{O}((V + E) \log V)\), ofreciendo una excelente escalabilidad para grafos urbanos reales de miles de estaciones y calles.
         </div>
       </div>
     </section>
@@ -1027,7 +1027,7 @@ def dijkstra_minutos(grafo, origen, destino):
 <script>
 // ==========================================
 // DEFINICIÓN DE DATOS DEL GRAFO
-// Problema 4.3: Transbordos y minutos
+// Grafos: Transbordos y minutos
 // Estudiante: Santiago García
 // ==========================================
 
@@ -1194,7 +1194,7 @@ function silentBfs(start, end) {
         dist[e.to] = dist[u] + 1;
         minMap[e.to] = minMap[u] + e.w;
         prev[e.to] = u;
-        queue.append ? queue.append(e.to) : queue.push(e.to);
+        queue.push(e.to);
       }
     });
   }
@@ -1433,7 +1433,7 @@ function bfsMapSteps(start, end) {
   const dij = silentDijkstra(start, end);
   let totalBfsMin = 0;
   for (let i = 1; i < finalPath.length; i++) {
-    const edge = GRAPH.adj[finalPath[i-1]].find(x => x.to === finalPath[i]);
+    const edge = GRAPH.adj[finalPath[i-1]].find(x => x.to === path ? path[i] : x.to === finalPath[i]);
     if (edge) totalBfsMin += edge.w;
   }
   const differ = !samePath(finalPath, dij.path);
