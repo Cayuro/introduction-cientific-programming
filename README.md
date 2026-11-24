@@ -7,8 +7,10 @@
 ---
 
 ## Quinto parcial
-- **Video:** https://youtu.be/ENLACE_DEL_VIDEO_DEL_GRUPO *(Reemplazar con el enlace de YouTube no listado / Google Drive con acceso público)*
+- **Video:** https://drive.google.com/file/d/1lsN7ffUmFqQ327Ta0wPGi3dacxGMdz7g/view?usp=drive_link
+- **Video Respaldo:** https://drive.google.com/file/d/154nIEk2JfRPbw8AL-YHy3kwsOvkbRq5e/view?usp=drive_link
 - **Diapositivas:** `quinto_parcial/index.html`
+- **Notas y Guion de Sustentación Individual (Santiago García):** [`readme_santiago.md`](readme_santiago.md)
 
 > **Instrucciones para ver las diapositivas:** Abrir el archivo [`quinto_parcial/index.html`](quinto_parcial/index.html) directamente con doble clic en cualquier navegador web. Funciona 100% fuera de línea sin requerir servidor local ni conexión a internet. La navegación entre diapositivas se realiza con las flechas `←` y `→` del teclado o con los controles en pantalla.
 
