@@ -6,6 +6,14 @@
 
 ---
 
+## Quinto parcial
+- **Video:** https://youtu.be/ENLACE_DEL_VIDEO_DEL_GRUPO *(Reemplazar con el enlace de YouTube no listado / Google Drive con acceso público)*
+- **Diapositivas:** `quinto_parcial/index.html`
+
+> **Instrucciones para ver las diapositivas:** Abrir el archivo [`quinto_parcial/index.html`](quinto_parcial/index.html) directamente con doble clic en cualquier navegador web. Funciona 100% fuera de línea sin requerir servidor local ni conexión a internet. La navegación entre diapositivas se realiza con las flechas `←` y `→` del teclado o con los controles en pantalla.
+
+---
+
 ## 1. Definición del Problema (Plantilla Oficial del Proyecto)
 
 - **Problema:**  

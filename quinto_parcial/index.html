@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quinto Parcial · Reparación, Gráficos y Modelo Predictivo · VIH/SIDA Medellín</title>
+<style>
+  :root {
+    --ink: #0f172a;
+    --muted: #475569;
+    --line: #cbd5e1;
+    --paper: #f8fafc;
+    --card: #ffffff;
+    --primary: #2563eb;
+    --primary-light: #eff6ff;
+    --accent: #0d9488;
+    --accent-light: #f0fdfa;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --success: #16a34a;
+    --slate: #334155;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: radial-gradient(900px 450px at 0% -10%, #f1f5f9 0%, transparent 60%), var(--paper);
+    overflow: hidden;
+  }
+  button, input { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  code, .mono { font-family: Consolas, "Cascadia Code", "Segoe UI Mono", monospace; }
+
+  .app {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 58px minmax(0, 1fr) 52px;
+  }
+  header.top, footer.nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0 24px;
+  }
+  header.top {
+    border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(8px);
+    justify-content: space-between;
+    z-index: 10;
+  }
+  .brand {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand .tag {
+    font-size: 11px;
+    font-weight: 800;
+    color: #fff;
+    background: var(--primary);
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .title-crumb {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .top-counter {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--slate);
+    background: #f1f5f9;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+  }
+
+  main.slides {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+  }
+  section.slide {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    padding: 32px 48px 48px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(28px);
+    transition: opacity 220ms ease, transform 220ms ease;
+    display: flex;
+    flex-direction: column;
+  }
+  section.slide.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+
+  .wrap {
+    max-width: 1140px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .kicker {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--primary);
+    margin: 0 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .kicker span.badge {
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  h1, h2, h3, h4 {
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+    line-height: 1.18;
+    color: var(--ink);
+  }
+  h1 { font-size: 38px; font-weight: 800; }
+  h2 { font-size: 26px; font-weight: 700; }
+  h3 { font-size: 18px; font-weight: 700; }
+  h4 { font-size: 15px; font-weight: 600; margin: 0 0 6px; }
+  p.lede {
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--muted);
+    margin: 0 0 20px;
+  }
+
+  /* Grids & Cards */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px;
+  }
+  .grid-fig {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+  }
+  .card.alert {
+    background: var(--primary-light);
+    border-left: 4px solid var(--primary);
+  }
+  .card.danger {
+    background: #fef2f2;
+    border-left: 4px solid var(--danger);
+  }
+  .card.success {
+    background: #f0fdf4;
+    border-left: 4px solid var(--success);
+  }
+  .card.warning {
+    background: #fffbeb;
+    border-left: 4px solid var(--warning);
+  }
+
+  /* Tables */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 10px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .data-table th, .data-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: left;
+  }
+  .data-table th {
+    background: #f8fafc;
+    font-weight: 700;
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .data-table tr:hover td { background: #f8fafc; }
+  .data-table tr.highlight td { background: #eff6ff; font-weight: 700; }
+
+  /* Figures */
+  .fig-box {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  }
+  .fig-box img {
+    max-width: 100%;
+    height: auto;
+    max-height: 420px;
+    border-radius: 6px;
+    display: block;
+    margin: 0 auto;
+    object-fit: contain;
+  }
+  .fig-caption {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  /* Pills & Badges */
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: #f1f5f9;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--line);
+    background: #fff;
+    transition: all 120ms ease;
+  }
+  .btn:hover { background: #f8fafc; border-color: #94a3b8; }
+  .btn.primary {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 4px 10px rgba(37,99,235,0.25);
+  }
+  .btn.primary:hover { background: #1d4ed8; }
+
+  /* Navigation Footer */
+  footer.nav {
+    border-top: 1px solid var(--line);
+    background: #ffffff;
+    justify-content: space-between;
+  }
+  .slide-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: all 120ms ease;
+  }
+  .dot.active {
+    background: var(--primary);
+    transform: scale(1.3);
+  }
+  .nav-btns { display: flex; gap: 8px; }
+
+  /* Q&A Accordion */
+  .qa {
+    width: 100%;
+    text-align: left;
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+  }
+  .answer {
+    padding: 12px 18px 16px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    background: #f8fafc;
+    border-left: 3px solid var(--primary);
+    margin: -4px 0 12px;
+    border-radius: 0 0 8px 8px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <span class="tag">Quinto Parcial</span>
+      <span>Reparación, Gráficos y Modelo Predictivo</span>
+      <span class="title-crumb" id="header-crumb">/ Inicio</span>
+    </div>
+    <div class="top-counter" id="top-counter">Diapositiva 1 / 11</div>
+  </header>
+
+  <main class="slides">
+    <!-- SLIDE 1: PORTADA -->
+    <section class="slide active" data-title="Inicio">
+      <div class="wrap" style="margin:auto 0;">
+        <div class="grid-2" style="align-items:center;">
+          <div>
+            <p class="kicker"><span class="badge">Periodo 2026-2</span> Introducción a la Programación Científica</p>
+            <h1>Vigilancia Epidemiológica de VIH/SIDA en Medellín (2012–2023)</h1>
+            <p class="lede">
+              Exposición técnica del flujo integral de ciencia de datos: lectura controlada, auditoría y depuración sin sesgos, análisis gráfico de hipótesis clínicas y modelo predictivo supervisado sin fuga de información.
+            </p>
+            <div class="pills">
+              <span class="pill">📁 Dataset SIVIGILA: 15.470 registros</span>
+              <span class="pill">⚙️ 116 variables auditadas</span>
+              <span class="pill">🤖 Gradient Boosting vs. Baseline</span>
+            </div>
+            <p style="margin-top:24px;">
+              <button type="button" class="btn primary" id="start-btn">Comenzar exposición técnica →</button>
+            </p>
+            <p style="font-size:12px; color:var(--muted); margin-top:8px;">
+              Diapositivas 100% autónomas. Navega con las teclas ← y → del teclado.
+            </p>
+          </div>
+          <div>
+            <div class="card" style="box-shadow: 0 10px 25px -5px rgba(0,0,0,0.06);">
+              <h3 style="border-bottom:1px solid #f1f5f9; padding-bottom:10px; margin-bottom:12px;">Equipo de Trabajo</h3>
+              <table style="width:100%; font-size:13px; line-height:1.8;">
+                <tr>
+                  <td>👤 <b>Santiago García</b></td>
+                  <td style="color:var(--muted); text-align:right;">Reparación e Imputación</td>
+                </tr>
+                <tr>
+                  <td>👤 <b>Juan Esteban Gómez</b></td>
+                  <td style="color:var(--muted); text-align:right;">Dinámica Temporal y Retraso</td>
+                </tr>
+                <tr>
+                  <td>👤 <b>Santiago Galvis</b></td>
+                  <td style="color:var(--muted); text-align:right;">Modelos y Evaluación</td>
+                </tr>
+              </table>
+              <div class="card alert" style="margin-top:14px; padding:12px; font-size:12px; line-height:1.5;">
+                <b>Pregunta orientadora del proyecto:</b><br>
+                «¿Cómo impactó la pandemia de COVID-19 la detección oportuna de VIH en Medellín y qué factores clínicos y sociodemográficos permiten anticipar la hospitalización urgente al momento de la notificación?»
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: 2.1 REPARACIÓN - LECTURA Y PARSEO -->
+    <section class="slide" data-title="2.1 Lectura y Parseo">
+      <div class="wrap">
+        <p class="kicker"><span class="badge">Sección 2.1</span> Reparación de Datos</p>
+        <h2>Lectura Controlada de I/O y Parseo Semántico de Tipos.</h2>
+        <p class="lede">
+          Garantizar la reproducibilidad científica exige no delegar la inferencia en pandas, sino controlar explícitamente cómo entra cada byte del archivo.
+        </p>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>1. Protocolo de Entrada (I/O)</h3>
+            <ul style="font-size:13px; line-height:1.7; color:var(--muted); padding-left:18px; margin:0 0 12px;">
+              <li><b>Encoding:</b> <code>utf-8</code> (con tolerancia a caracteres en <code>latin-1</code>).</li>
+              <li><b>Separador:</b> Delimitador por comas (<code>,</code>).</li>
+              <li><b>Tratamiento estricto de centinelas:</b> Identificación de cadenas no informativas tratadas como <code>NaN</code> en la lectura:
+                <br><code>na_values=['99999.07', '-   -', 'Sin Información', 'SIN INFORMACION', 'NaN', 'nan', '']</code>.
+              </li>
+              <li><b>Dimensión inicial cargada:</b> <b>15.470 filas</b> y <b>116 columnas</b>.</li>
+            </ul>
+            <div class="card alert" style="padding:10px 14px; font-size:12px;">
+              <b>Evidencia de diseño:</b> Al capturar <code>'99999.07'</code> como centinela en la lectura, se evitó que distorsionara los cálculos matemáticos como un número real.
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>2. Parseo Semántico y Huecos Creados</h3>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Tipo de Variable</th>
+                  <th>Variables Clave</th>
+                  <th>Huecos nacidos en el parseo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Fechas</b><br><code>pd.to_datetime(dayfirst=True)</code></td>
+                  <td><code>fec_not</code>, <code>fec_con_</code>, <code>ini_sin_</code>, <code>fecha_nto_</code></td>
+                  <td><b>6.124 NaT</b> en <code>ini_sin_</code> (pacientes asintomáticos o sin fecha de síntoma recordada).</td>
+                </tr>
+                <tr>
+                  <td><b>Numéricas</b><br><code>pd.to_numeric()</code></td>
+                  <td><code>edad_</code>, <code>estrato_</code>, $\Delta t$ retraso</td>
+                  <td>Coerción de cadenas corruptas a <code>NaN</code>. Se preservaron 15.467 edades válidas.</td>
+                </tr>
+                <tr>
+                  <td><b>Dicotómicas</b><br><code>Categorical / Binarias</code></td>
+                  <td><code>pac_hos_</code>, <code>tub_pul</code>, <code>sar_kap</code></td>
+                  <td>Mapeo de códigos $1 \rightarrow \text{Sí}$, $2 \rightarrow \text{No}$. Ausencias no marcadas auditadas.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: 2.1 REPARACIÓN - AUDITORÍA Y DEPURACIÓN -->
+    <section class="slide" data-title="2.1 Auditoría y Depuración">
+      <div class="wrap">
+        <p class="kicker"><span class="badge">Sección 2.1</span> Reparación de Datos</p>
+        <h2>Auditoría de Calidad: Faltantes, Duplicados e Imposibles.</h2>
+        <p class="lede">
+          Se sometió el dataset a reglas de dominio epidemiológico para distinguir errores de digitación de realidades clínicas.
+        </p>
+
+        <div class="grid-3">
+          <div class="card">
+            <h3 style="color:var(--primary);">1. Auditoría de Faltantes</h3>
+            <p style="font-size:13px; color:var(--muted); line-height:1.6;">
+              Se detectó un patrón heterogéneo de completitud:
+            </p>
+            <ul style="font-size:12px; color:var(--muted); padding-left:16px; margin:0;">
+              <li><code>fec_not</code> (Fecha notificación): <b>0% faltantes</b> (campo obligatorio del SIVIGILA).</li>
+              <li><code>nombre_comuna</code>: <b>21.8% no reportado</b> (falta de georreferenciación en ficha).</li>
+              <li><code>estrato_</code>: <b>14.3% faltantes</b> o no estratificados.</li>
+              <li><code>ini_sin_</code>: <b>39.6% ausente</b> (típico en VIH por curso asintomático prolongado).</li>
+            </ul>
+          </div>
+
+          <div class="card danger">
+            <h3 style="color:var(--danger);">2. Auditoría de Duplicados</h3>
+            <p style="font-size:13px; color:var(--muted); line-height:1.6;">
+              Se rastrearon registros idénticos en todas las columnas:
+            </p>
+            <ul style="font-size:12px; color:var(--muted); padding-left:16px; margin:0;">
+              <li>Se encontraron <b>3 filas duplicadas exactas</b> generadas por doble transmisión electrónica al sistema municipal.</li>
+              <li><b>Decisión:</b> Se eliminaron las 3 redundancias, quedando un universo limpio de <b>15.467 casos únicos</b>.</li>
+            </ul>
+          </div>
+
+          <div class="card warning">
+            <h3 style="color:var(--warning);">3. Imposibles Cronológicos</h3>
+            <p style="font-size:13px; color:var(--muted); line-height:1.6;">
+              Validación de consistencia temporal estricta:
+            </p>
+            <ul style="font-size:12px; color:var(--muted); padding-left:16px; margin:0;">
+              <li><b>Incoherencia cronológica:</b> Casos donde $\text{ini\_sin\_} > \text{fec\_con\_}$ (síntomas después de consultar). Se depuraron como inconsistentes para el cálculo de $\Delta t$.</li>
+              <li><b>Fechas futuras:</b> Ningún registro superó el año 2023.</li>
+              <li><b>Edades biológicas:</b> Rango válido entre 0 y 94 años (sin edades negativas o $>110$).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: 2.1 REPARACIÓN - DECISIONES E IMPUTACIÓN -->
+    <section class="slide" data-title="2.1 Imputación y Decisiones">
+      <div class="wrap">
+        <p class="kicker"><span class="badge">Sección 2.1</span> Reparación de Datos</p>
+        <h2>Decisiones por Variable y Método de Imputación Preservadora.</h2>
+        <p class="lede">
+          Variable por variable: ¿por qué se eliminó, se dejó el hueco o se imputó? Y el impacto estadístico sobre la varianza.
+        </p>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>Matriz de Decisiones por Variable</h3>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Variable</th>
+                  <th>Decisión Tomada</th>
+                  <th>Justificación Técnica / Epidemiológica</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>ini_sin_</code> / $\Delta t$</td>
+                  <td><b>Dejar el hueco</b> (No imputar)</td>
+                  <td>El VIH es asintomático por años. Imputar una fecha de síntomas inventaría una historia clínica ficticia.</td>
+                </tr>
+                <tr>
+                  <td><code>nombre_comuna</code></td>
+                  <td><b>Categoría explícita</b><br><code>'Sin Información'</code></td>
+                  <td>Eliminar el 21.8% de filas crearía un grave <b>sesgo de selección</b> (perdería población informal).</td>
+                </tr>
+                <tr>
+                  <td><code>estrato_</code></td>
+                  <td><b>Categoría explícita</b><br><code>'Sin Estrato'</code></td>
+                  <td>La falta de estrato suele correlacionar con inquilinatos o habitanza de calle. Es una señal clínica.</td>
+                </tr>
+                <tr>
+                  <td>Comorbilidades (TB, etc.)</td>
+                  <td><b>Cero / Ausencia</b></td>
+                  <td>En la ficha epidemiológica, la casilla vacía indica negatividad confirmada al tamizaje clínico.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card danger">
+            <h3 style="color:var(--danger);">El Peligro de la Media Simple</h3>
+            <p style="font-size:13px; line-height:1.6; color:var(--muted);">
+              Si hubiésemos imputado las variables numéricas con la <b>Media global</b>, se habría producido una distorsión metodológica severa:
+            </p>
+            <div style="background:#fff; border:1px solid #fecaca; border-radius:8px; padding:12px; margin:10px 0; font-size:12px; line-height:1.6; color:#991b1b;">
+              ⚠️ <b>Aplastamiento de la Varianza:</b> Rellenar miles de vacíos con un único valor promedio concentra artificialmente la masa de probabilidad, <b>destruyendo la desviación estándar ($\sigma$)</b> y subestimando los errores estándar en los modelos predictivos.
+            </div>
+            <p style="font-size:13px; line-height:1.6; color:var(--muted);">
+              <b>Solución aplicada:</b> Se empleó <b>muestreo empírico aleatorio (*hot-deck*)</b> e imputación por medianas locales dentro de pipelines de Machine Learning aislados (`SimpleImputer(strategy='median')`), preservando la dispersión y la robustez frente a valores atípicos.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: 2.2 GRÁFICOS - FIGURA 1 -->
+    <section class="slide" data-title="2.2 Figura 1 · Pandemia">
+      <div class="wrap">
+        <p class="kicker"><span class="badge">Sección 2.2</span> Gráficos del Notebook</p>
+        <h2>Figura 1: Dinámica Temporal y Choque Sanitario COVID-19.</h2>
+
+        <div class="grid-fig">
+          <div class="fig-box">
+            <img src="fig1_dinamica_temporal_covid.png" alt="Evolución Anual y Choque COVID-19">
+            <div class="fig-caption">Evolución Anual de Casos Notificados de VIH/SIDA (2012–2023) e impacto del año 2020.</div>
+          </div>
+
+          <div>
+            <div class="card alert" style="margin-bottom:14px;">
+              <h4>Pregunta del Notebook</h4>
+              <p style="font-size:14px; font-weight:600; margin:0; line-height:1.4;">
+                «¿Cómo evolucionó la notificación anual de casos de VIH/SIDA en Medellín entre 2012 y 2023 y cuál fue el impacto del choque sanitario por COVID-19 en 2020?»
+              </p>
+            </div>
+
+            <div class="card" style="margin-bottom:14px;">
+              <h4>Lectura Cuantitativa Exacta</h4>
+              <ul style="font-size:13px; line-height:1.6; color:var(--muted); padding-left:18px; margin:0;">
+                <li>Entre 2012 (<b>649 casos</b>) y 2019 (<b>1.812 casos</b>), la notificación creció un <b>+179.2%</b>.</li>
+                <li>En 2020 se registró una caída abrupta del <b>-17.5%</b>, descendiendo a <b>1.494 casos</b> (318 casos menos en un solo año).</li>
+                <li>En 2021 se evidencia un rebote post-pandemia alcanzando 1.671 casos (+11.8%).</li>
+              </ul>
+            </div>
+
+            <div class="card danger">
+              <h4 style="color:var(--danger);">Qué NO alcanza a concluirse</h4>
+              <p style="font-size:12px; line-height:1.5; color:#991b1b; margin:0;">
+                <b>No se puede concluir</b> que la transmisión real del virus haya disminuido en 2020. La reducción refleja un marcado <b>subregistro y retraso diagnóstico</b> por el cierre de servicios ambulatorios, cuarentenas obligatorias y saturación de laboratorios dedicados a pruebas PCR de COVID-19.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: 2.2 GRÁFICOS - FIGURA 2 -->
+    <section class="slide" data-title="2.2 Figura 2 · Retraso">
+      <div class="wrap">
+        <p class="kicker"><span class="badge">Sección 2.2</span> Gráficos del Notebook</p>
+        <h2>Figura 2: Retraso Diagnóstico según Régimen de Aseguramiento.</h2>
+
+        <div class="grid-fig">
+          <div class="fig-box">
+            <img src="fig2_retraso_diagnostico.png" alt="Retraso Diagnóstico por Régimen">
+            <div class="fig-caption">Mediana y distribución del retraso entre inicio de síntomas y consulta ($\Delta t$) por año y régimen.</div>
+          </div>
+
+          <div>
+            <div class="card alert" style="margin-bottom:14px;">
+              <h4>Pregunta del Notebook</h4>
+              <p style="font-size:14px; font-weight:600; margin:0; line-height:1.4;">
+                «¿Cuál es el tiempo de retraso entre el inicio de síntomas y la consulta médica ($\Delta t$) y cómo varía según el régimen de aseguramiento en salud?»
+              </p>
+            </div>
+
+            <div class="card" style="margin-bottom:14px;">
+              <h4>Lectura Cuantitativa Exacta</h4>
+              <ul style="font-size:13px; line-height:1.6; color:var(--muted); padding-left:18px; margin:0;">
+                <li>La <b>mediana anual de retraso</b> se mantiene relativamente estable entre <b>13 y 19 días</b>.</li>
+                <li>Sin embargo, la distribución presenta una gran asimetría positiva: la <b>media trepó hasta 143.8 días en 2019</b>, con un rango intercuartílico (IQR) de 68 días.</li>
+                <li>Pacientes No Asegurados y Subsidiados concentran las colas de retraso más prolongadas (>100 días).</li>
+              </ul>
+            </div>
+
+            <div class="card danger">
+              <h4 style="color:var(--danger);">Qué NO alcanza a concluirse</h4>
+              <p style="font-size:12px; line-height:1.5; color:#991b1b; margin:0;">
+                <b>No se puede concluir causalidad directa</b> de que el régimen de salud cause por sí solo el retraso. La brecha está mediada por variables de confusión (*confounders*) como barreras geográficas en las comunas periféricas, precariedad laboral para pedir citas y el estigma social.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: 2.2 GRÁFICOS - FIGURA 3 -->
+    <section class="slide" data-title="2.2 Figura 3 · Hospitalización">
+      <div class="wrap">
+        <p class="kicker"><span class="badge">Sección 2.2</span> Gráficos del Notebook</p>
+        <h2>Figura 3: Tasa de Hospitalización por Régimen y Estrato.</h2>
+
+        <div class="grid-fig">
+          <div class="fig-box">
+            <img src="fig3_hospitalizacion_regimen_estrato.png" alt="Hospitalización por Régimen y Estrato">
+            <div class="fig-caption">Porcentaje de pacientes hospitalizados según régimen de aseguramiento y estrato socioeconómico.</div>
+          </div>
+
+          <div>
+            <div class="card alert" style="margin-bottom:14px;">
+              <h4>Pregunta del Notebook</h4>
+              <p style="font-size:14px; font-weight:600; margin:0; line-height:1.4;">
+                «¿Qué factores sociodemográficos (régimen de salud y estrato) se asocian con una mayor tasa de hospitalización urgente en pacientes con VIH?»
+              </p>
+            </div>
+
+            <div class="card" style="margin-bottom:14px;">
+              <h4>Lectura Cuantitativa Exacta</h4>
+              <ul style="font-size:13px; line-height:1.6; color:var(--muted); padding-left:18px; margin:0;">
+                <li>Pacientes del <b>Régimen Contributivo</b> presentan una tasa de hospitalización del <b>18.9%</b>.</li>
+                <li>En pacientes <b>No Asegurados</b>, la tasa de hospitalización se dispara al <b>29.1%</b> (una brecha de más de 10 puntos porcentuales).</li>
+                <li>En el <b>Estrato 1</b>, la hospitalización supera el <b>24.2%</b>, cayendo progresivamente hasta menos del 15% en estratos altos.</li>
+              </ul>
+            </div>
+
+            <div class="card danger">
+              <h4 style="color:var(--danger);">Qué NO alcanza a concluirse</h4>
+              <p style="font-size:12px; line-height:1.5; color:#991b1b; margin:0;">
+                <b>No se puede concluir</b> que los hospitales internen arbitrariamente a los no asegurados. Este indicador refleja que la población sin seguro consulta en estadios inmunológicos tardíos (*late presenters*) con infecciones oportunistas ya descompensadas.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: 2.3 MODELO - DEFINICIÓN Y FILTRACIÓN -->
+    <section class="slide" data-title="2.3 Formulación del Modelo">
+      <div class="wrap">
+        <p class="kicker"><span class="badge">Sección 2.3</span> Modelo de Predicción</p>
+        <h2>Variable Objetivo ($y$), Predictores ($X$) y Control de Filtración.</h2>
+        <p class="lede">
+          Garantizar un modelo clínicamente útil exige que los predictores $X$ existan estrictamente en el instante del triaje médico inicial.
+        </p>
+
+        <div class="grid-2">
+          <div>
+            <div class="card alert" style="margin-bottom:16px;">
+              <h4>Variable Objetivo ($y$) en una sola oración</h4>
+              <p style="font-size:15px; font-weight:700; color:var(--ink); line-height:1.4; margin:0;">
+                «Predecir si un paciente diagnosticado con VIH/SIDA requerirá hospitalización clínica urgente ($y = 1$) frente a manejo ambulatorio ($y = 0$) al momento de su notificación epidemiológica en el SIVIGILA.»
+              </p>
+            </div>
+
+            <div class="card">
+              <h4>Prevalencia y Desbalance de Clases</h4>
+              <div style="display:flex; justify-content:space-around; text-align:center; margin-top:8px;">
+                <div>
+                  <div style="font-size:24px; font-weight:800; color:var(--success);">79.94%</div>
+                  <div style="font-size:12px; color:var(--muted);">Manejo Ambulatorio ($y=0$)</div>
+                </div>
+                <div style="border-left:1px solid var(--line);"></div>
+                <div>
+                  <div style="font-size:24px; font-weight:800; color:var(--danger);">20.06%</div>
+                  <div style="font-size:12px; color:var(--muted);">Hospitalización Urgente ($y=1$)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card success" style="margin-bottom:14px;">
+              <h4 style="color:var(--success);">✅ Qué entra en $X$ (15 Predictores Legítimos)</h4>
+              <ul style="font-size:12px; line-height:1.6; color:var(--muted); padding-left:16px; margin:0;">
+                <li><b>Perfil sociodemográfico:</b> <code>edad_</code>, <code>sexo_</code>, <code>estrato_cat</code>, <code>regimen_nombre</code>, <code>grupo_edad_ciclo</code>.</li>
+                <li><b>Territorio:</b> <code>nombre_comuna</code> (macro-zonas urbanas).</li>
+                <li><b>Comorbilidades al ingreso:</b> Tuberculosis pulmonar (<code>tub_pul</code>), Sarcoma de Kaposi (<code>sar_kap</code>), Hepatitis B/C, Toxoplasmosis, Neumonía por Pneumocystis.</li>
+              </ul>
+            </div>
+
+            <div class="card danger">
+              <h4 style="color:var(--danger);">🚫 Qué se dejó por fuera (Control de *Data Leakage*)</h4>
+              <ul style="font-size:12px; line-height:1.6; color:#991b1b; padding-left:16px; margin:0;">
+                <li><code>pac_hos_</code>: Es la variable origen de $y$ (filtración directa idéntica).</li>
+                <li><code>con_fin_</code> (Vivo / Muerto): Desenlace final posterior a la hospitalización.</li>
+                <li><code>fec_def_</code> (Fecha defunción): Información futura inexistente en el triaje.</li>
+                <li><code>dias_estancia</code>: Consecuencia posterior a la decisión de internación.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: 2.3 MODELO - BASELINE Y MÉTRICAS -->
+    <section class="slide" data-title="2.3 Baseline y Métricas">
+      <div class="wrap">
+        <p class="kicker"><span class="badge">Sección 2.3</span> Modelo de Predicción</p>
+        <h2>Partición, Baseline Nulo y Evaluación en Conjunto de Prueba.</h2>
+        <p class="lede">
+          Partición estratificada 80/20 ($n_{\text{train}}=12.376$, $n_{\text{test}}=3.094$) con evaluación estricta en datos no vistos.
+        </p>
+
+        <div class="grid-fig">
+          <div class="fig-box">
+            <img src="fig4_curva_roc.png" alt="Curvas ROC Comparativas">
+            <div class="fig-caption">Curvas ROC en conjunto de prueba ($n=3.094$): Dummy vs. Árbol Ponderado vs. Gradient Boosting.</div>
+          </div>
+
+          <div>
+            <div class="card alert" style="margin-bottom:12px;">
+              <h4>El Baseline Nulo (`DummyClassifier - Prior`)</h4>
+              <p style="font-size:13px; line-height:1.5; color:var(--muted); margin:0;">
+                Predice siempre la clase mayoritaria (todos ambulatorios, $y=0$). Obtiene un <b>Accuracy engañoso de 79.93%</b>, pero su <b>Sensibilidad es 0.00%</b> (no detecta a ningún hospitalizado) y su <b>ROC-AUC es 0.5000</b> (lanzar una moneda al aire).
+              </p>
+            </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Modelo</th>
+                  <th>Accuracy</th>
+                  <th>Sensibilidad (Recall)</th>
+                  <th>Precisión</th>
+                  <th>F1-Score</th>
+                  <th>ROC-AUC</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Dummy Nulo</b></td>
+                  <td>0.7993</td>
+                  <td>0.0000</td>
+                  <td>0.0000</td>
+                  <td>0.0000</td>
+                  <td>0.5000</td>
+                </tr>
+                <tr>
+                  <td><b>Árbol Ponderado</b></td>
+                  <td>0.7217</td>
+                  <td><b>0.5411</b></td>
+                  <td>0.3684</td>
+                  <td>0.4384</td>
+                  <td>0.7252</td>
+                </tr>
+                <tr class="highlight">
+                  <td><b>Gradient Boosting</b></td>
+                  <td><b>0.8416</b></td>
+                  <td>0.3816</td>
+                  <td><b>0.6910</b></td>
+                  <td><b>0.4917</b></td>
+                  <td><b>0.8260</b></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="card success" style="margin-top:12px; padding:10px 14px; font-size:12px; line-height:1.5;">
+              <b>PR-AUC (Average Precision):</b><br>
+              El Baseline nulo obtiene <b>0.2007</b>. Gradient Boosting alcanza <b>0.6021</b>, triplicando la capacidad discriminativa en pacientes positivos.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: 2.3 MODELO - DIAGNÓSTICO Y LÍMITES -->
+    <section class="slide" data-title="2.3 Diagnóstico y Límites">
+      <div class="wrap">
+        <p class="kicker"><span class="badge">Sección 2.3</span> Modelo de Predicción</p>
+        <h2>¿El Modelo le Gana al Nulo? Factores Clave y Límites Clínicos.</h2>
+        <p class="lede">
+          Veredicto frente al baseline nulo, importancia de factores biológicos y advertencias de uso.
+        </p>
+
+        <div class="grid-fig">
+          <div class="fig-box">
+            <img src="fig6_importancia_predictores.png" alt="Importancia de Predictores">
+            <div class="fig-caption">Importancia relativa de predictores en Gradient Boosting (Tuberculosis, Neumonía y Régimen).</div>
+          </div>
+
+          <div>
+            <div class="card success" style="margin-bottom:14px;">
+              <h4 style="color:var(--success);">¿Gana al nulo? SÍ, con contundencia técnica</h4>
+              <ul style="font-size:13px; line-height:1.6; color:var(--muted); padding-left:18px; margin:0;">
+                <li>Supera el Accuracy base: <b>84.16% vs. 79.93%</b>.</li>
+                <li>En capacidad de discriminación real: <b>ROC-AUC de 0.8260 frente a 0.5000</b>.</li>
+                <li>Los factores de mayor peso predictivo son la <b>Tuberculosis Pulmonar</b>, las infecciones respiratorias oportunistas y la condición de <b>No Asegurado</b>.</li>
+              </ul>
+            </div>
+
+            <div class="card danger">
+              <h4 style="color:var(--danger);">Límites Críticos: Qué NO se puede concluir</h4>
+              <ol style="font-size:12px; line-height:1.6; color:#991b1b; padding-left:18px; margin:0;">
+                <li><b>No sustituye la valoración médica:</b> Es una herramienta de triaje probabilístico para priorizar camas, no un diagnóstico clínico etiológico.</li>
+                <li><b>Correlación no es causalidad:</b> Que el régimen subsidiado o no asegurado aumente la probabilidad no significa que el tipo de carné cause biológicamente el deterioro.</li>
+                <li><b>Validez territorial acotada:</b> El modelo refleja la dinámica de Medellín (2012–2023); no debe aplicarse a zonas rurales sin calibración previa.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: CONCLUSIONES Y CIERRE -->
+    <section class="slide" data-title="Conclusiones">
+      <div class="wrap">
+        <p class="kicker"><span class="badge">Síntesis</span> Evaluación Final</p>
+        <h2>Conclusiones del Quinto Parcial y Recomendaciones.</h2>
+        <p class="lede">
+          Integración de hallazgos del grupo en salud pública computacional:
+        </p>
+
+        <button type="button" class="qa"><b>1. Reparación Rigurosa: ¿Por qué no eliminar los datos con faltantes?</b> <span>+</span></button>
+        <div class="answer">
+          Porque en epidemiología, los datos ausentes no son aleatorios (MNAR). La falta de comuna o estrato se concentra en población desfavorecida o en situación de calle. Eliminar esas filas habría eliminado a los pacientes con mayor riesgo clínico, sesgando el modelo hacia perfiles artificialmente saludables.
+        </div>
+
+        <button type="button" class="qa"><b>2. Dinámica Temporal: ¿Cuál es el verdadero mensaje de la caída en 2020?</b> <span>+</span></button>
+        <div class="answer">
+          La reducción del 17.5% en 2020 demuestra la fragilidad de los sistemas de vigilancia epidemiológica ante choques globales. No disminuyó la infección por VIH; se acumuló una cohorte oculta de pacientes que consultaron años más tarde en estadios clínicos mucho más avanzados.
+        </div>
+
+        <button type="button" class="qa"><b>3. Modelo Predictivo: ¿Por qué el Accuracy es una métrica engañosa?</b> <span>+</span></button>
+        <div class="answer">
+          Ante un desbalance del 80/20, un modelo inútil que prediga que nadie se hospitaliza obtiene 80% de Accuracy. El verdadero valor científico se mide en ROC-AUC (0.826) y PR-AUC (0.602), demostrando capacidad genuina para encender alertas tempranas de internación.
+        </div>
+
+        <button type="button" class="qa"><b>4. Organización del Video Grupal (6 a 10 minutos)</b> <span>+</span></button>
+        <div class="answer">
+          Grabación secuencial sobre este HTML:<br>
+          • <b>Santiago García (0:00 - 2:30):</b> Portada, lectura I/O, parseo semántico, auditoría de imposibles y método de imputación.<br>
+          • <b>Juan Esteban Gómez (2:30 - 5:30):</b> Dinámica temporal, choque COVID-19 (-17.5%), retraso diagnóstico y lectura crítica de gráficos.<br>
+          • <b>Santiago Galvis (5:30 - 8:30):</b> Formulación de $y$, control de fuga en $X$, comparación con el Baseline Nulo, métricas ROC-AUC y límites del modelo.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="nav">
+    <div class="slide-dots" id="slide-dots"></div>
+    <div class="nav-btns">
+      <button type="button" class="btn" id="prev">← Anterior</button>
+      <button type="button" class="btn" id="next">Siguiente →</button>
+    </div>
+  </footer>
+</div>
+
+<script>
+// ==========================================
+// CONTROLADOR DE DIAPOSITIVAS Y NAVEGACIÓN
+// Quinto Parcial · Periodo 2026-2
+// ==========================================
+
+let slideIndex = 0;
+let slides = [];
+
+function goSlide(n) {
+  slideIndex = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach((s, i) => s.classList.toggle("active", i === slideIndex));
+
+  // Actualizar dots
+  const dots = document.querySelectorAll(".dot");
+  dots.forEach((d, i) => d.classList.toggle("active", i === slideIndex));
+
+  // Actualizar breadcrumb y contador superior
+  const title = slides[slideIndex].getAttribute("data-title") || "";
+  document.getElementById("header-crumb").textContent = "/ " + title;
+  document.getElementById("top-counter").textContent = "Diapositiva " + (slideIndex + 1) + " / " + slides.length;
+}
+
+function init() {
+  slides = [...document.querySelectorAll(".slide")];
+
+  // Generar dots en el footer
+  const dotsContainer = document.getElementById("slide-dots");
+  dotsContainer.innerHTML = slides.map((_, i) =>
+    '<button type="button" class="dot ' + (i === 0 ? "active" : "") + '" title="Diapositiva ' + (i+1) + '" onclick="goSlide(' + i + ')"></button>'
+  ).join("");
+
+  // Event listeners para botones
+  document.getElementById("prev").addEventListener("click", () => goSlide(slideIndex - 1));
+  document.getElementById("next").addEventListener("click", () => goSlide(slideIndex + 1));
+  
+  const startBtn = document.getElementById("start-btn");
+  if (startBtn) startBtn.addEventListener("click", () => goSlide(1));
+
+  // Navegación por teclado (Flechas ← → y Barra espaciadora)
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") goSlide(slideIndex - 1);
+    if (e.key === "ArrowRight" || e.key === " ") goSlide(slideIndex + 1);
+  });
+
+  // Acordeón interactivo en diapositiva de conclusiones
+  document.querySelectorAll(".qa").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const ans = btn.nextElementSibling;
+      if (ans) {
+        ans.style.display = ans.style.display === "none" ? "block" : "none";
+      }
+    });
+  });
+
+  goSlide(0);
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
