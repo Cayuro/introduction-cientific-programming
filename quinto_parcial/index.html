@@ -359,18 +359,18 @@
             <p class="kicker"><span class="badge">Periodo 2026-2</span> Introducción a la Programación Científica</p>
             <h1>Vigilancia Epidemiológica de VIH/SIDA en Medellín (2012–2023)</h1>
             <p class="lede">
-              Exposición técnica del flujo integral de ciencia de datos: lectura controlada, auditoría y depuración sin sesgos, análisis gráfico de hipótesis clínicas y modelo predictivo supervisado sin fuga de información.
+              Exposición técnica del flujo de ciencia de datos: lectura controlada, auditoría y depuración sin sesgos, análisis gráfico del choque por pandemia y modelo predictivo de hospitalización sin fuga de información.
             </p>
             <div class="pills">
               <span class="pill">📁 Dataset SIVIGILA: 15.470 registros</span>
               <span class="pill">⚙️ 116 variables auditadas</span>
-              <span class="pill">🤖 Gradient Boosting vs. Baseline</span>
+              <span class="pill">🤖 Gradient Boosting vs. Modelo Nulo</span>
             </div>
             <p style="margin-top:24px;">
               <button type="button" class="btn primary" id="start-btn">Comenzar exposición técnica →</button>
             </p>
             <p style="font-size:12px; color:var(--muted); margin-top:8px;">
-              Diapositivas 100% autónomas. Navega con las flechas ← y → del teclado.
+              Diapositivas autónomas sin internet. Navega con las flechas ← y → del teclado.
             </p>
           </div>
           <div>
@@ -408,52 +408,52 @@
     <section class="slide" data-title="2.1 Lectura y Parseo">
       <div class="wrap">
         <p class="kicker"><span class="badge">Sección 2.1</span> Reparación de Datos</p>
-        <h2>Lectura Controlada de I/O y Parseo Semántico de Tipos.</h2>
+        <h2>Lectura Controlada de Entrada y Conversión de Tipos de Datos.</h2>
         <p class="lede">
-          Garantizar la reproducibilidad científica exige no delegar la inferencia en pandas, sino controlar explícitamente cómo entra cada byte del archivo.
+          Garantizar la reproducibilidad exige controlar exactamente cómo se lee el archivo y cómo se convierten los textos a fechas y números reales.
         </p>
 
         <div class="grid-2">
           <div class="card">
-            <h3>1. Protocolo de Entrada (I/O)</h3>
+            <h3>1. Protocolo de Entrada del Archivo</h3>
             <ul style="font-size:13px; line-height:1.7; color:var(--muted); padding-left:18px; margin:0 0 12px;">
-              <li><b>Encoding:</b> <code>utf-8</code> (con tolerancia a caracteres en <code>latin-1</code>).</li>
-              <li><b>Separador:</b> Delimitador por comas (<code>,</code>).</li>
-              <li><b>Tratamiento estricto de centinelas:</b> Identificación de cadenas no informativas tratadas como <code>NaN</code> en la lectura:
-                <br><code>na_values=['99999.07', '-   -', 'Sin Información', 'SIN INFORMACION', 'NaN', 'nan', '']</code>.
+              <li><b>Codificación de caracteres:</b> <code>UTF-8</code> (compatible con <code>latin-1</code>).</li>
+              <li><b>Separador de columnas:</b> Coma tradicional (<code>,</code>).</li>
+              <li><b>Detección de textos vacíos o inválidos:</b> Se trataron directamente como faltantes (vacíos) los valores centinela:
+                <br><code>99999.07</code>, guiones (<code>-   -</code>), y la frase <code>Sin Información</code>.
               </li>
               <li><b>Dimensión inicial cargada:</b> <b>15.470 filas</b> y <b>116 columnas</b>.</li>
             </ul>
             <div class="card alert" style="padding:10px 14px; font-size:12px;">
-              <b>Evidencia de diseño:</b> Al capturar <code>'99999.07'</code> como centinela en la lectura, se evitó que distorsionara los cálculos matemáticos como un número real.
+              <b>Control clave:</b> Tratar <code>99999.07</code> como vacío desde el inicio evitó que el programa lo calculara como si fuera un número real de días o pesos.
             </div>
           </div>
 
           <div class="card">
-            <h3>2. Parseo Semántico y Huecos Creados</h3>
+            <h3>2. Conversión de Tipos y Vacíos Detectados</h3>
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>Tipo de Variable</th>
-                  <th>Variables Clave</th>
-                  <th>Huecos nacidos en el parseo</th>
+                  <th>Tipo de Dato</th>
+                  <th>Variables del Estudio</th>
+                  <th>Vacíos identificados al convertir</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><b>Fechas</b><br><code>pd.to_datetime(dayfirst=True)</code></td>
-                  <td><code>fec_not</code>, <code>fec_con_</code>, <code>ini_sin_</code>, <code>fecha_nto_</code></td>
-                  <td><b>6.124 NaT</b> en <code>ini_sin_</code> (pacientes asintomáticos o sin fecha de síntoma recordada).</td>
+                  <td><b>Fechas</b><br>(Día / Mes / Año)</td>
+                  <td>Fecha de notificación, Fecha de consulta, Fecha de inicio de síntomas, Fecha de nacimiento</td>
+                  <td><b>6.124 fechas de síntomas vacías</b> (pacientes asintomáticos o que no recordaban cuándo empezaron).</td>
                 </tr>
                 <tr>
-                  <td><b>Numéricas</b><br><code>pd.to_numeric()</code></td>
-                  <td><code>edad_</code>, <code>estrato_</code>, $\Delta t$ retraso</td>
-                  <td>Coerción de cadenas corruptas a <code>NaN</code>. Se preservaron 15.467 edades válidas.</td>
+                  <td><b>Números</b><br>(Enteros y Decimales)</td>
+                  <td>Edad del paciente, Estrato, Días de retraso diagnóstico</td>
+                  <td>Se limpiaron textos corruptos. Quedaron 15.467 edades reales y bien formateadas.</td>
                 </tr>
                 <tr>
-                  <td><b>Dicotómicas</b><br><code>Categorical / Binarias</code></td>
-                  <td><code>pac_hos_</code>, <code>tub_pul</code>, <code>sar_kap</code></td>
-                  <td>Mapeo de códigos $1 \rightarrow \text{Sí}$, $2 \rightarrow \text{No}$. Ausencias no marcadas auditadas.</td>
+                  <td><b>Opciones Sí / No</b><br>(Variables binarias)</td>
+                  <td>Hospitalización, Tuberculosis, Sarcoma de Kaposi, Hepatitis</td>
+                  <td>Se convirtieron los códigos numéricos a opciones claras: <b>1 = Sí</b> y <b>2 = No</b>.</td>
                 </tr>
               </tbody>
             </table>
@@ -468,43 +468,43 @@
         <p class="kicker"><span class="badge">Sección 2.1</span> Reparación de Datos</p>
         <h2>Auditoría de Calidad: Faltantes, Duplicados e Imposibles.</h2>
         <p class="lede">
-          Se sometió el dataset a reglas de dominio epidemiológico para distinguir errores de digitación de realidades clínicas.
+          Se aplicaron reglas médicas y epidemiológicas para separar errores de digitación de realidades biológicas del paciente.
         </p>
 
         <div class="grid-3">
           <div class="card">
-            <h3 style="color:var(--primary);">1. Auditoría de Faltantes</h3>
+            <h3 style="color:var(--primary);">1. Datos Faltantes (Vacíos)</h3>
             <p style="font-size:13px; color:var(--muted); line-height:1.6;">
-              Se detectó un patrón heterogéneo de completitud:
+              Revisión porcentaje por porcentaje:
             </p>
             <ul style="font-size:12px; color:var(--muted); padding-left:16px; margin:0;">
-              <li><code>fec_not</code> (Fecha notificación): <b>0% faltantes</b> (campo obligatorio del SIVIGILA).</li>
-              <li><code>nombre_comuna</code>: <b>21.8% no reportado</b> (falta de georreferenciación en ficha).</li>
-              <li><code>estrato_</code>: <b>14.3% faltantes</b> o no estratificados.</li>
-              <li><code>ini_sin_</code>: <b>39.6% ausente</b> (típico en VIH por curso asintomático prolongado).</li>
+              <li><b>Fecha de notificación:</b> <b>0% vacíos</b> (es obligatoria por ley para registrar el caso).</li>
+              <li><b>Comuna de residencia:</b> <b>21.8% sin reportar</b> (faltó anotar el barrio en la ficha).</li>
+              <li><b>Estrato socioeconómico:</b> <b>14.3% sin estrato</b>.</li>
+              <li><b>Fecha de síntomas:</b> <b>39.6% ausente</b> (típico en VIH porque no da síntomas al inicio).</li>
             </ul>
           </div>
 
           <div class="card danger">
-            <h3 style="color:var(--danger);">2. Auditoría de Duplicados</h3>
+            <h3 style="color:var(--danger);">2. Filas Duplicadas</h3>
             <p style="font-size:13px; color:var(--muted); line-height:1.6;">
-              Se rastrearon registros idénticos en todas las columnas:
+              Búsqueda de registros repetidos:
             </p>
             <ul style="font-size:12px; color:var(--muted); padding-left:16px; margin:0;">
-              <li>Se encontraron <b>3 filas duplicadas exactas</b> generadas por doble transmisión electrónica al sistema municipal.</li>
-              <li><b>Decisión:</b> Se eliminaron las 3 redundancias, quedando un universo limpio de <b>15.467 casos únicos</b>.</li>
+              <li>Se encontraron <b>3 pacientes duplicados exactamente</b> por doble envío al sistema de salud.</li>
+              <li><b>Decisión:</b> Se eliminaron las 3 repeticiones, quedando una base limpia de <b>15.467 pacientes únicos</b>.</li>
             </ul>
           </div>
 
           <div class="card warning">
-            <h3 style="color:var(--warning);">3. Imposibles Cronológicos</h3>
+            <h3 style="color:var(--warning);">3. Registros Imposibles</h3>
             <p style="font-size:13px; color:var(--muted); line-height:1.6;">
-              Validación de consistencia temporal estricta:
+              Validación de coherencia en el tiempo:
             </p>
             <ul style="font-size:12px; color:var(--muted); padding-left:16px; margin:0;">
-              <li><b>Incoherencia cronológica:</b> Casos donde $\text{ini\_sin\_} > \text{fec\_con\_}$ (síntomas después de consultar). Se depuraron como inconsistentes para el cálculo de $\Delta t$.</li>
-              <li><b>Fechas futuras:</b> Ningún registro superó el año 2023.</li>
-              <li><b>Edades biológicas:</b> Rango válido entre 0 y 94 años (sin edades negativas o $>110$).</li>
+              <li><b>Fechas al revés:</b> Casos donde la fecha de síntomas aparecía <i>después</i> de ir al médico. Se apartaron para no distorsionar el cálculo de días de retraso.</li>
+              <li><b>Fechas en el futuro:</b> Ninguna fecha superó el año 2023.</li>
+              <li><b>Edades biológicas:</b> Todas estuvieron entre 0 y 94 años (sin edades negativas ni mayores a 110).</li>
             </ul>
           </div>
         </div>
@@ -517,55 +517,55 @@
         <p class="kicker"><span class="badge">Sección 2.1</span> Reparación de Datos</p>
         <h2>Decisiones por Variable y Método de Imputación Preservadora.</h2>
         <p class="lede">
-          Variable por variable: ¿por qué se eliminó, se dejó el hueco o se imputó? Y el impacto estadístico sobre la varianza.
+          ¿Por qué se eliminó, por qué se dejó el hueco o por qué se imputó cada dato? El peligro de usar el promedio simple.
         </p>
 
         <div class="grid-2">
           <div class="card">
-            <h3>Matriz de Decisiones por Variable</h3>
+            <h3>Decisiones Tomadas Variable por Variable</h3>
             <table class="data-table">
               <thead>
                 <tr>
                   <th>Variable</th>
                   <th>Decisión Tomada</th>
-                  <th>Justificación Técnica / Epidemiológica</th>
+                  <th>Razón Médica y Estadística</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><code>ini_sin_</code> / $\Delta t$</td>
-                  <td><b>Dejar el hueco</b> (No imputar)</td>
-                  <td>El VIH es asintomático por años. Imputar una fecha de síntomas inventaría una historia clínica ficticia.</td>
+                  <td><b>Fecha de síntomas y Días de retraso</b></td>
+                  <td><b>Dejar el hueco</b><br>(No inventar fecha)</td>
+                  <td>El VIH es asintomático por años. Inventarles una fecha sería crear un historial médico falso.</td>
                 </tr>
                 <tr>
-                  <td><code>nombre_comuna</code></td>
-                  <td><b>Categoría explícita</b><br><code>'Sin Información'</code></td>
-                  <td>Eliminar el 21.8% de filas crearía un grave <b>sesgo de selección</b> (perdería población informal).</td>
+                  <td><b>Comuna de residencia</b></td>
+                  <td><b>Crear categoría:</b><br><code>'Sin Información'</code></td>
+                  <td>Si borrábamos el 21.8% de filas, eliminábamos a la población vulnerable o informal (sesgo de selección).</td>
                 </tr>
                 <tr>
-                  <td><code>estrato_</code></td>
-                  <td><b>Categoría explícita</b><br><code>'Sin Estrato'</code></td>
-                  <td>La falta de estrato suele correlacionar con inquilinatos o habitanza de calle. Es una señal clínica.</td>
+                  <td><b>Estrato del paciente</b></td>
+                  <td><b>Crear categoría:</b><br><code>'Sin Estrato'</code></td>
+                  <td>Suele indicar inquilinatos, zonas rurales o habitanza de calle. No tener estrato es una señal clínica.</td>
                 </tr>
                 <tr>
-                  <td>Comorbilidades (TB, etc.)</td>
-                  <td><b>Cero / Ausencia</b></td>
-                  <td>En la ficha epidemiológica, la casilla vacía indica negatividad confirmada al tamizaje clínico.</td>
+                  <td><b>Enfermedades asociadas (Tuberculosis, etc.)</b></td>
+                  <td><b>Asignar 0 (No tiene)</b></td>
+                  <td>En la ficha de salud, si el médico deja la casilla en blanco significa que el paciente dio negativo.</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
           <div class="card danger">
-            <h3 style="color:var(--danger);">El Peligro de la Media Simple</h3>
+            <h3 style="color:var(--danger);">¿Por qué NUNCA se debe usar la Media simple?</h3>
             <p style="font-size:13px; line-height:1.6; color:var(--muted);">
-              Si hubiésemos imputado las variables numéricas con la <b>Media global</b>, se habría producido una distorsión metodológica severa:
+              Si hubiésemos rellenado los datos faltantes con el <b>Promedio simple (la media)</b>, habríamos cometido un error grave:
             </p>
             <div style="background:#fff; border:1px solid #fecaca; border-radius:8px; padding:12px; margin:10px 0; font-size:12px; line-height:1.6; color:#991b1b;">
-              ⚠️ <b>Aplastamiento de la Varianza:</b> Rellenar miles de vacíos con un único valor promedio concentra artificialmente la masa de probabilidad, <b>destruyendo la desviación estándar ($\sigma$)</b> y subestimando los errores estándar en los modelos predictivos.
+              ⚠️ <b>Aplastamiento de la Variabilidad:</b> Rellenar miles de vacíos con un único valor promedio concentra artificialmente todos los pacientes en el mismo punto, <b>destruyendo la desviación estándar (la dispersión natural)</b> y haciendo que los modelos crean falsamente que los datos son más homogéneos de lo que realmente son.
             </div>
             <p style="font-size:13px; line-height:1.6; color:var(--muted);">
-              <b>Solución aplicada:</b> Se empleó <b>muestreo empírico aleatorio (*hot-deck*)</b> e imputación por medianas locales dentro de pipelines de Machine Learning aislados (`SimpleImputer(strategy='median')`), preservando la dispersión y la robustez frente a valores atípicos.
+              <b>Solución aplicada:</b> Se usó <b>muestreo empírico aleatorio</b> y medianas calculadas exclusivamente dentro del grupo de entrenamiento, preservando intacta la variabilidad biológica real de los pacientes.
             </p>
           </div>
         </div>
@@ -575,8 +575,8 @@
     <!-- SLIDE 5: 2.2 GRÁFICOS - FIGURA 1 -->
     <section class="slide" data-title="2.2 Figura 1 · Pandemia">
       <div class="wrap">
-        <p class="kicker"><span class="badge">Sección 2.2</span> Gráficos del Notebook</p>
-        <h2>Figura 1: Dinámica Temporal y Choque Sanitario COVID-19.</h2>
+        <p class="kicker"><span class="badge">Sección 2.2</span> Gráficos del Estudio</p>
+        <h2>Figura 1: Notificación Anual de Casos y Choque de la Pandemia.</h2>
 
         <div class="grid-fig">
           <div class="fig-box">
@@ -593,18 +593,18 @@
             </div>
 
             <div class="card" style="margin-bottom:14px;">
-              <h4>Lectura Cuantitativa Exacta</h4>
+              <h4>Lectura con Cifras Exactas</h4>
               <ul style="font-size:13px; line-height:1.6; color:var(--muted); padding-left:18px; margin:0;">
-                <li>Entre 2012 (<b>649 casos</b>) y 2019 (<b>1.812 casos</b>), la notificación creció un <b>+179.2%</b>.</li>
-                <li>En 2020 se registró una caída abrupta del <b>-17.5%</b>, descendiendo a <b>1.494 casos</b> (318 casos menos en un solo año).</li>
-                <li>En 2021 se evidencia un rebote post-pandemia alcanzando 1.671 casos (+11.8%).</li>
+                <li>Entre 2012 (<b>649 casos</b>) y 2019 (<b>1.812 casos</b>), las notificaciones crecieron un <b>+179.2%</b>.</li>
+                <li>En el año 2020 de la pandemia hubo una **caída abrupta del -17.5%**, bajando a **1.494 casos** (318 casos menos en un solo año).</li>
+                <li>En 2021 hubo un rebote post-pandemia llegando a 1.671 casos (+11.8%).</li>
               </ul>
             </div>
 
             <div class="card danger">
-              <h4 style="color:var(--danger);">Qué NO alcanza a concluirse</h4>
+              <h4 style="color:var(--danger);">Qué NO alcanza a concluirse con esta figura</h4>
               <p style="font-size:12px; line-height:1.5; color:#991b1b; margin:0;">
-                <b>No se puede concluir</b> que la transmisión real del virus haya disminuido en 2020. La reducción refleja un marcado <b>subregistro y retraso diagnóstico</b> por el cierre de servicios ambulatorios, cuarentenas obligatorias y saturación de laboratorios dedicados a pruebas PCR de COVID-19.
+                <b>No se puede concluir</b> que los contagios reales de VIH hayan bajado en 2020. La caída no es biológica: se debió a un fuerte <b>subregistro y retraso de diagnóstico</b> por los confinamientos obligatorios, el miedo de la gente a ir a clínicas y hospitales saturados con COVID-19.
               </p>
             </div>
           </div>
@@ -615,36 +615,36 @@
     <!-- SLIDE 6: 2.2 GRÁFICOS - FIGURA 2 -->
     <section class="slide" data-title="2.2 Figura 2 · Retraso">
       <div class="wrap">
-        <p class="kicker"><span class="badge">Sección 2.2</span> Gráficos del Notebook</p>
-        <h2>Figura 2: Retraso Diagnóstico según Régimen de Aseguramiento.</h2>
+        <p class="kicker"><span class="badge">Sección 2.2</span> Gráficos del Estudio</p>
+        <h2>Figura 2: Retraso en Consultar según Régimen de Salud.</h2>
 
         <div class="grid-fig">
           <div class="fig-box">
             <img src="fig2_retraso_diagnostico.png" alt="Retraso Diagnóstico por Régimen">
-            <div class="fig-caption">Mediana y distribución del retraso entre inicio de síntomas y consulta ($\Delta t$) por año y régimen.</div>
+            <div class="fig-caption">Mediana y distribución de días de retraso entre síntomas y consulta médica por año y régimen.</div>
           </div>
 
           <div>
             <div class="card alert" style="margin-bottom:14px;">
               <h4>Pregunta del Notebook</h4>
               <p style="font-size:14px; font-weight:600; margin:0; line-height:1.4;">
-                «¿Cuál es el tiempo de retraso entre el inicio de síntomas y la consulta médica ($\Delta t$) y cómo varía según el régimen de aseguramiento en salud?»
+                «¿Cuántos días de retraso pasan entre el inicio de síntomas y la consulta médica, y cómo varía según el régimen de salud del paciente?»
               </p>
             </div>
 
             <div class="card" style="margin-bottom:14px;">
-              <h4>Lectura Cuantitativa Exacta</h4>
+              <h4>Lectura con Cifras Exactas</h4>
               <ul style="font-size:13px; line-height:1.6; color:var(--muted); padding-left:18px; margin:0;">
-                <li>La <b>mediana anual de retraso</b> se mantiene relativamente estable entre <b>13 y 19 días</b>.</li>
-                <li>Sin embargo, la distribución presenta una gran asimetría positiva: la <b>media trepó hasta 143.8 días en 2019</b>, con un rango intercuartílico (IQR) de 68 días.</li>
-                <li>Pacientes No Asegurados y Subsidiados concentran las colas de retraso más prolongadas (>100 días).</li>
+                <li>La <b>mediana de retraso</b> se mantiene estable entre <b>13 y 19 días</b> (la mitad de los pacientes consulta en unas dos semanas).</li>
+                <li>Sin embargo, el <b>promedio matemático se disparó hasta 143.8 días en 2019</b> (casi 5 meses), porque un grupo de pacientes tarda meses o años en consultar.</li>
+                <li>Los pacientes **No Asegurados y del Régimen Subsidiado** son quienes acumulan estos retrasos extremos de más de 100 días.</li>
               </ul>
             </div>
 
             <div class="card danger">
-              <h4 style="color:var(--danger);">Qué NO alcanza a concluirse</h4>
+              <h4 style="color:var(--danger);">Qué NO alcanza a concluirse con esta figura</h4>
               <p style="font-size:12px; line-height:1.5; color:#991b1b; margin:0;">
-                <b>No se puede concluir causalidad directa</b> de que el régimen de salud cause por sí solo el retraso. La brecha está mediada por variables de confusión (*confounders*) como barreras geográficas en las comunas periféricas, precariedad laboral para pedir citas y el estigma social.
+                <b>No se puede concluir causalidad directa</b> de que el tipo de carné de salud sea la causa del retraso. La brecha está mediada por factores como vivir en barrios lejanos, no tener dinero para pasajes, informalidad en el trabajo y miedo al estigma social.
               </p>
             </div>
           </div>
@@ -655,13 +655,13 @@
     <!-- SLIDE 7: 2.2 GRÁFICOS - FIGURA 3 -->
     <section class="slide" data-title="2.2 Figura 3 · Hospitalización">
       <div class="wrap">
-        <p class="kicker"><span class="badge">Sección 2.2</span> Gráficos del Notebook</p>
+        <p class="kicker"><span class="badge">Sección 2.2</span> Gráficos del Estudio</p>
         <h2>Figura 3: Tasa de Hospitalización por Régimen y Estrato.</h2>
 
         <div class="grid-fig">
           <div class="fig-box">
             <img src="fig3_hospitalizacion_regimen_estrato.png" alt="Hospitalización por Régimen y Estrato">
-            <div class="fig-caption">Porcentaje de pacientes hospitalizados según régimen de aseguramiento y estrato socioeconómico.</div>
+            <div class="fig-caption">Porcentaje de pacientes que requirieron hospitalización urgente según su aseguramiento y estrato.</div>
           </div>
 
           <div>
@@ -673,18 +673,18 @@
             </div>
 
             <div class="card" style="margin-bottom:14px;">
-              <h4>Lectura Cuantitativa Exacta</h4>
+              <h4>Lectura con Cifras Exactas</h4>
               <ul style="font-size:13px; line-height:1.6; color:var(--muted); padding-left:18px; margin:0;">
-                <li>Pacientes del <b>Régimen Contributivo</b> presentan una tasa de hospitalización del <b>18.9%</b>.</li>
-                <li>En pacientes <b>No Asegurados</b>, la tasa de hospitalización se dispara al <b>29.1%</b> (una brecha de más de 10 puntos porcentuales).</li>
-                <li>En el <b>Estrato 1</b>, la hospitalización supera el <b>24.2%</b>, cayendo progresivamente hasta menos del 15% en estratos altos.</li>
+                <li>Pacientes con trabajo formal (**Régimen Contributivo**) se hospitalizan en un **18.9%**.</li>
+                <li>En pacientes **No Asegurados (sin seguro médico)**, la hospitalización se dispara al **29.1%** (más de 10 puntos de diferencia).</li>
+                <li>En el **Estrato 1**, la hospitalización supera el **24.2%**, bajando a menos del 15% en estratos altos.</li>
               </ul>
             </div>
 
             <div class="card danger">
-              <h4 style="color:var(--danger);">Qué NO alcanza a concluirse</h4>
+              <h4 style="color:var(--danger);">Qué NO alcanza a concluirse con esta figura</h4>
               <p style="font-size:12px; line-height:1.5; color:#991b1b; margin:0;">
-                <b>No se puede concluir</b> que los hospitales internen arbitrariamente a los no asegurados. Este indicador refleja que la población sin seguro consulta en estadios inmunológicos tardíos (*late presenters*) con infecciones oportunistas ya descompensadas.
+                <b>No se puede concluir</b> que las clínicas internen más a los no asegurados por discriminación. Lo que el dato muestra es que las personas sin seguro médico llegan a urgencias cuando ya están muy graves y con infecciones oportunistas avanzadas.
               </p>
             </div>
           </div>
@@ -696,31 +696,31 @@
     <section class="slide" data-title="2.3 Formulación del Modelo">
       <div class="wrap">
         <p class="kicker"><span class="badge">Sección 2.3</span> Modelo de Predicción</p>
-        <h2>Variable Objetivo ($y$), Predictores ($X$) y Control de Filtración.</h2>
+        <h2>Objetivo a Predecir, Variables de Entrada y Control de Filtración.</h2>
         <p class="lede">
-          Garantizar un modelo clínicamente útil exige que los predictores $X$ existan estrictamente en el instante del triaje médico inicial.
+          Para que el modelo sirva en un hospital real, solo puede usar información disponible en el minuto exacto en que el paciente llega a la consulta.
         </p>
 
         <div class="grid-2">
           <div>
             <div class="card alert" style="margin-bottom:16px;">
-              <h4>Variable Objetivo ($y$) en una sola oración</h4>
+              <h4>Variable a Predecir en una sola oración</h4>
               <p style="font-size:15px; font-weight:700; color:var(--ink); line-height:1.4; margin:0;">
-                «Predecir si un paciente diagnosticado con VIH/SIDA requerirá hospitalización clínica urgente ($y = 1$) frente a manejo ambulatorio ($y = 0$) al momento de su notificación epidemiológica en el SIVIGILA.»
+                «Anticipar si un paciente diagnosticado con VIH requerirá hospitalización clínica urgente frente a manejo ambulatorio al momento de su notificación epidemiológica en el SIVIGILA.»
               </p>
             </div>
 
             <div class="card">
-              <h4>Prevalencia y Desbalance de Clases</h4>
+              <h4>Balance de Pacientes en los Datos</h4>
               <div style="display:flex; justify-content:space-around; text-align:center; margin-top:8px;">
                 <div>
                   <div style="font-size:24px; font-weight:800; color:var(--success);">79.94%</div>
-                  <div style="font-size:12px; color:var(--muted);">Manejo Ambulatorio ($y=0$)</div>
+                  <div style="font-size:12px; color:var(--muted);">Manejo Ambulatorio<br>(12.364 pacientes)</div>
                 </div>
                 <div style="border-left:1px solid var(--line);"></div>
                 <div>
                   <div style="font-size:24px; font-weight:800; color:var(--danger);">20.06%</div>
-                  <div style="font-size:12px; color:var(--muted);">Hospitalización Urgente ($y=1$)</div>
+                  <div style="font-size:12px; color:var(--muted);">Hospitalización Urgente<br>(3.103 pacientes)</div>
                 </div>
               </div>
             </div>
@@ -728,21 +728,21 @@
 
           <div>
             <div class="card success" style="margin-bottom:14px;">
-              <h4 style="color:var(--success);">✅ Qué entra en $X$ (15 Predictores Legítimos)</h4>
+              <h4 style="color:var(--success);">✅ Qué entra en el Modelo (15 Variables Legítimas)</h4>
               <ul style="font-size:12px; line-height:1.6; color:var(--muted); padding-left:16px; margin:0;">
-                <li><b>Perfil sociodemográfico:</b> <code>edad_</code>, <code>sexo_</code>, <code>estrato_cat</code>, <code>regimen_nombre</code>, <code>grupo_edad_ciclo</code>.</li>
-                <li><b>Territorio:</b> <code>nombre_comuna</code> (macro-zonas urbanas).</li>
-                <li><b>Comorbilidades al ingreso:</b> Tuberculosis pulmonar (<code>tub_pul</code>), Sarcoma de Kaposi (<code>sar_kap</code>), Hepatitis B/C, Toxoplasmosis, Neumonía por Pneumocystis.</li>
+                <li><b>Datos del paciente:</b> Edad, sexo, estrato socioeconómico, régimen de salud, etapa de vida (joven, adulto, mayor).</li>
+                <li><b>Ubicación:</b> Comuna donde reside en Medellín.</li>
+                <li><b>Enfermedades detectadas al ingreso:</b> Tuberculosis pulmonar, Sarcoma de Kaposi, Hepatitis B o C, Toxoplasmosis, Neumonía por Pneumocystis.</li>
               </ul>
             </div>
 
             <div class="card danger">
-              <h4 style="color:var(--danger);">🚫 Qué se dejó por fuera (Control de *Data Leakage*)</h4>
+              <h4 style="color:var(--danger);">🚫 Qué se dejó estrictamente por fuera (Fuga de Información)</h4>
               <ul style="font-size:12px; line-height:1.6; color:#991b1b; padding-left:16px; margin:0;">
-                <li><code>pac_hos_</code>: Es la variable origen de $y$ (filtración directa idéntica).</li>
-                <li><code>con_fin_</code> (Vivo / Muerto): Desenlace final posterior a la hospitalización.</li>
-                <li><code>fec_def_</code> (Fecha defunción): Información futura inexistente en el triaje.</li>
-                <li><code>dias_estancia</code>: Consecuencia posterior a la decisión de internación.</li>
+                <li><code>pac_hos_</code>: Es la misma variable que queremos predecir (trampa directa).</li>
+                <li><b>Si el paciente vivió o falleció:</b> Ocurre semanas o meses después.</li>
+                <li><b>Fecha de defunción:</b> Información del futuro inexistente al llegar a la cita.</li>
+                <li><b>Días de estancia en el hospital:</b> Es consecuencia de haber sido internado.</li>
               </ul>
             </div>
           </div>
@@ -754,67 +754,63 @@
     <section class="slide" data-title="2.3 Baseline y Métricas">
       <div class="wrap">
         <p class="kicker"><span class="badge">Sección 2.3</span> Modelo de Predicción</p>
-        <h2>Partición, Baseline Nulo y Evaluación en Conjunto de Prueba.</h2>
+        <h2>División de Datos, Modelo Nulo y Evaluación con Pacientes Nuevos.</h2>
         <p class="lede">
-          Partición estratificada 80/20 ($n_{\text{train}}=12.376$, $n_{\text{test}}=3.094$) con evaluación estricta en datos no vistos.
+          Se separaron los datos en 80% para entrenar (12.376 pacientes) y 20% para evaluar (3.094 pacientes no vistos).
         </p>
 
         <div class="grid-fig">
           <div class="fig-box">
             <img src="fig4_curva_roc.png" alt="Curvas ROC Comparativas">
-            <div class="fig-caption">Curvas ROC en conjunto de prueba ($n=3.094$): Dummy vs. Árbol Ponderado vs. Gradient Boosting.</div>
+            <div class="fig-caption">Curvas de capacidad de discriminación en 3.094 pacientes de prueba: Modelo Nulo vs. Árbol vs. Gradient Boosting.</div>
           </div>
 
           <div>
             <div class="card alert" style="margin-bottom:12px;">
-              <h4>El Baseline Nulo (`DummyClassifier - Prior`)</h4>
+              <h4>El Modelo Nulo Obligatorio (Dummy Baseline)</h4>
               <p style="font-size:13px; line-height:1.5; color:var(--muted); margin:0;">
-                Predice siempre la clase mayoritaria (todos ambulatorios, $y=0$). Obtiene un <b>Accuracy engañoso de 79.93%</b>, pero su <b>Sensibilidad es 0.00%</b> (no detecta a ningún hospitalizado) y su <b>ROC-AUC es 0.5000</b> (lanzar una moneda al aire).
+                Es la trampa típica: un modelo bobo que dice a todos <i>«nadie se va a hospitalizar»</i>. Obtiene un <b>Accuracy engañoso de 79.93%</b> solo por acertar a la mayoría, pero su <b>Detección de enfermos reales (Sensibilidad) es de 0.00%</b> (no detecta a nadie) y su capacidad de discriminación es de <b>0.5000</b> (igual a lanzar una moneda).
               </p>
             </div>
 
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>Modelo</th>
-                  <th>Accuracy</th>
-                  <th>Sensibilidad (Recall)</th>
-                  <th>Precisión</th>
-                  <th>F1-Score</th>
-                  <th>ROC-AUC</th>
+                  <th>Modelo Evaluado</th>
+                  <th>Exactitud (Accuracy)</th>
+                  <th>Detección Enfermos (Sensibilidad)</th>
+                  <th>Precisión de Alertas</th>
+                  <th>Capacidad Discriminación (ROC-AUC)</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><b>Dummy Nulo</b></td>
-                  <td>0.7993</td>
-                  <td>0.0000</td>
-                  <td>0.0000</td>
-                  <td>0.0000</td>
-                  <td>0.5000</td>
+                  <td><b>Modelo Nulo (Baseline)</b></td>
+                  <td>79.9%</td>
+                  <td>0.0%</td>
+                  <td>0.0%</td>
+                  <td>0.500 (Puro azar)</td>
                 </tr>
                 <tr>
-                  <td><b>Árbol Ponderado</b></td>
-                  <td>0.7217</td>
-                  <td><b>0.5411</b></td>
-                  <td>0.3684</td>
-                  <td>0.4384</td>
-                  <td>0.7252</td>
+                  <td><b>Árbol de Decisión</b></td>
+                  <td>72.2%</td>
+                  <td><b>54.1%</b></td>
+                  <td>36.8%</td>
+                  <td>0.725</td>
                 </tr>
                 <tr class="highlight">
-                  <td><b>Gradient Boosting</b></td>
-                  <td><b>0.8416</b></td>
-                  <td>0.3816</td>
-                  <td><b>0.6910</b></td>
-                  <td><b>0.4917</b></td>
-                  <td><b>0.8260</b></td>
+                  <td><b>Gradient Boosting (Final)</b></td>
+                  <td><b>84.2%</b></td>
+                  <td>38.2%</td>
+                  <td><b>69.1%</b></td>
+                  <td><b>0.826 (Sobresaliente)</b></td>
                 </tr>
               </tbody>
             </table>
 
             <div class="card success" style="margin-top:12px; padding:10px 14px; font-size:12px; line-height:1.5;">
-              <b>PR-AUC (Average Precision):</b><br>
-              El Baseline nulo obtiene <b>0.2007</b>. Gradient Boosting alcanza <b>0.6021</b>, triplicando la capacidad discriminativa en pacientes positivos.
+              <b>Precisión en Casos Críticos (PR-AUC):</b><br>
+              El modelo nulo obtiene apenas <b>0.201</b>. Nuestro modelo de Gradient Boosting alcanza <b>0.602</b>, triplicando la capacidad de acertar en pacientes graves.
             </div>
           </div>
         </div>
@@ -827,31 +823,31 @@
         <p class="kicker"><span class="badge">Sección 2.3</span> Modelo de Predicción</p>
         <h2>¿El Modelo le Gana al Nulo? Factores Clave y Límites Clínicos.</h2>
         <p class="lede">
-          Veredicto frente al baseline nulo, importancia de factores biológicos y advertencias de uso.
+          Veredicto final frente al azar, variables de mayor impacto médico y precauciones para no cometer errores.
         </p>
 
         <div class="grid-fig">
           <div class="fig-box">
             <img src="fig6_importancia_predictores.png" alt="Importancia de Predictores">
-            <div class="fig-caption">Importancia relativa de predictores en Gradient Boosting (Tuberculosis, Neumonía y Régimen).</div>
+            <div class="fig-caption">Variables de mayor peso en la decisión del modelo: Tuberculosis, Neumonía y Régimen de salud.</div>
           </div>
 
           <div>
             <div class="card success" style="margin-bottom:14px;">
-              <h4 style="color:var(--success);">¿Gana al nulo? SÍ, con contundencia técnica</h4>
+              <h4 style="color:var(--success);">¿Gana al modelo nulo? SÍ, rotundamente</h4>
               <ul style="font-size:13px; line-height:1.6; color:var(--muted); padding-left:18px; margin:0;">
-                <li>Supera el Accuracy base: <b>84.16% vs. 79.93%</b>.</li>
-                <li>En capacidad de discriminación real: <b>ROC-AUC de 0.8260 frente a 0.5000</b>.</li>
-                <li>Los factores de mayor peso predictivo son la <b>Tuberculosis Pulmonar</b>, las infecciones respiratorias oportunistas y la condición de <b>No Asegurado</b>.</li>
+                <li>Supera la exactitud base: <b>84.2% frente a 79.9%</b>.</li>
+                <li>En capacidad de distinguir enfermos graves de leves: <b>0.826 frente a 0.500</b>.</li>
+                <li>Las variables que más encienden las alarmas son tener <b>Tuberculosis Pulmonar</b>, infecciones respiratorias oportunistas y estar <b>sin seguro médico</b>.</li>
               </ul>
             </div>
 
             <div class="card danger">
               <h4 style="color:var(--danger);">Límites Críticos: Qué NO se puede concluir</h4>
               <ol style="font-size:12px; line-height:1.6; color:#991b1b; padding-left:18px; margin:0;">
-                <li><b>No sustituye la valoración médica:</b> Es una herramienta de triaje probabilístico para priorizar camas, no un diagnóstico clínico etiológico.</li>
-                <li><b>Correlación no es causalidad:</b> Que el régimen subsidiado o no asegurado aumente la probabilidad no significa que el tipo de carné cause biológicamente el deterioro.</li>
-                <li><b>Validez territorial acotada:</b> El modelo refleja la dinámica de Medellín (2012–2023); no debe aplicarse a zonas rurales sin calibración previa.</li>
+                <li><b>No reemplaza al médico:</b> Es un sistema de alerta para organizar camas y priorizar citas, no un examen de laboratorio definitivo.</li>
+                <li><b>Correlación no es la causa:</b> No tener seguro predice hospitalización porque la persona tarda en consultar, no porque el carné cure el virus por sí mismo.</li>
+                <li><b>Válido solo para Medellín:</b> Fue entrenado con datos de la ciudad (2012–2023); no debe usarse en zonas rurales sin ajustarlo antes.</li>
               </ol>
             </div>
           </div>
@@ -865,31 +861,31 @@
         <p class="kicker"><span class="badge">Síntesis</span> Evaluación Final</p>
         <h2>Conclusiones del Quinto Parcial y Recomendaciones.</h2>
         <p class="lede">
-          Integración de hallazgos en salud pública computacional:
+          Síntesis de los cuatro aprendizajes fundamentales de este estudio epidemiológico:
         </p>
 
-        <button type="button" class="qa"><b>1. Reparación Rigurosa: ¿Por qué no eliminar los datos con faltantes?</b> <span>+</span></button>
+        <button type="button" class="qa"><b>1. Reparación de Datos: ¿Por qué no borrar las filas con datos vacíos?</b> <span>+</span></button>
         <div class="answer">
-          Porque en epidemiología, los datos ausentes no son aleatorios (MNAR). La falta de comuna o estrato se concentra en población desfavorecida o en situación de calle. Eliminar esas filas habría eliminado a los pacientes con mayor riesgo clínico, sesgando el modelo hacia perfiles artificialmente saludables.
+          Porque en salud, los vacíos no ocurren por casualidad. La falta de estrato o de comuna se concentra en personas sin hogar o en empleos informales. Si borrábamos esas filas, eliminábamos a los pacientes con mayor riesgo de complicarse, dejando un estudio con pacientes falsamente sanos.
         </div>
 
-        <button type="button" class="qa"><b>2. Dinámica Temporal: ¿Cuál es el verdadero mensaje de la caída en 2020?</b> <span>+</span></button>
+        <button type="button" class="qa"><b>2. Dinámica Temporal: ¿Qué nos enseña la caída del año 2020?</b> <span>+</span></button>
         <div class="answer">
-          La reducción del 17.5% en 2020 demuestra la fragilidad de los sistemas de vigilancia epidemiológica ante choques globales. No disminuyó la infección por VIH; se acumuló una cohorte oculta de pacientes que consultaron años más tarde en estadios clínicos mucho más avanzados.
+          La caída del 17.5% en 2020 demuestra cómo una crisis sanitaria como el COVID-19 distorsiona las estadísticas de otras enfermedades. El virus del VIH no dejó de transmitirse; simplemente las personas no pudieron ir a hacerse la prueba a tiempo y consultaron años después en peor estado.
         </div>
 
-        <button type="button" class="qa"><b>3. Modelo Predictivo: ¿Por qué el Accuracy es una métrica engañosa?</b> <span>+</span></button>
+        <button type="button" class="qa"><b>3. Modelo Predictivo: ¿Por qué el porcentaje de acierto (Accuracy) engaña?</b> <span>+</span></button>
         <div class="answer">
-          Ante un desbalance del 80/20, un modelo inútil que prediga que nadie se hospitaliza obtiene 80% de Accuracy. El verdadero valor científico se mide en ROC-AUC (0.826) y PR-AUC (0.602), demostrando capacidad genuina para encender alertas tempranas de internación.
+          Porque cuando el 80% de las personas no se hospitaliza, un modelo inútil que diga que «nadie se va a hospitalizar» acierta el 80% de las veces sin salvar a nadie. El verdadero mérito está en la capacidad de separar enfermos (ROC-AUC de 0.826) y en la precisión de las alertas positivas.
         </div>
 
-        <button type="button" class="qa"><b>4. Hoja de Ruta de la Exposición (6 a 10 minutos)</b> <span>+</span></button>
+        <button type="button" class="qa"><b>4. Hoja de Ruta de la Exposición Individual (6 a 8 minutos)</b> <span>+</span></button>
         <div class="answer">
-          Secuencia de exposición individual por Santiago García:<br>
-          • <b>0:00 - 2:00:</b> Portada, justificación del problema, lectura controlada I/O y parseo semántico.<br>
-          • <b>2:00 - 4:00:</b> Auditoría de duplicados e imposibles, decisiones por variable y preservación de varianza.<br>
-          • <b>4:00 - 6:30:</b> Explicación de las 3 figuras (Pandemia, Retraso, Hospitalización) con cifras y límites.<br>
-          • <b>6:30 - 9:00:</b> Modelo predictivo: formulación de $y$, control de fuga en $X$, métricas vs. Dummy y límites clínicos.
+          Secuencia de exposición en pantalla por Santiago García:<br>
+          • <b>0:00 - 2:00:</b> Portada, justificación del problema, lectura de entrada y conversión de fechas.<br>
+          • <b>2:00 - 4:00:</b> Auditoría de duplicados, imposibles cronológicos y por qué no usar el promedio simple.<br>
+          • <b>4:00 - 6:30:</b> Explicación de las 3 figuras (Pandemia, Retraso, Hospitalización) con cifras exactas y límites.<br>
+          • <b>6:30 - 8:00:</b> Modelo predictivo: qué se predice, qué se excluyó para evitar trampas, comparación con el modelo nulo y conclusiones finales.
         </div>
       </div>
     </section>
