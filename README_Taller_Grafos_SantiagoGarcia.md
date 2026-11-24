@@ -4,7 +4,8 @@
 **Fecha de entrega:** Miércoles 18 de noviembre de 2026  
 **Entregables:**
 1. Archivo interactivo autónomo: [`transbordos_y_minutos-SantiagoGarcia.html`](transbordos_y_minutos-SantiagoGarcia.html) (también disponible en [`grafos/index.html`](grafos/index.html)).
-2. Video de 4 a 6 minutos demostrando la ejecución del laboratorio interactivo y explicando el algoritmo.
+2. Video de sustentación (4 a 6 minutos): [Ver Video en Google Drive](https://drive.google.com/file/d/1QBdeKbHiS4opKbF9_Kyu7pOqPSLvcHbr/view?usp=drive_link)
+3. Documento maestro de notas y entregas: [`readme_santiago.md`](readme_santiago.md)
 
 ---
 
