@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quinto Parcial · Reparación, Gráficos y Modelo Predictivo · VIH/SIDA Medellín</title>
+<title>Quinto Parcial · Reparación, Gráficos y Modelo Predictivo · Santiago García</title>
 <style>
   :root {
     --ink: #0f172a;
@@ -74,6 +74,16 @@
     font-size: 13px;
     color: var(--muted);
     font-weight: 500;
+  }
+  .top-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .top-author {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate);
   }
   .top-counter {
     font-size: 13px;
@@ -334,7 +344,10 @@
       <span>Reparación, Gráficos y Modelo Predictivo</span>
       <span class="title-crumb" id="header-crumb">/ Inicio</span>
     </div>
-    <div class="top-counter" id="top-counter">Diapositiva 1 / 11</div>
+    <div class="top-right">
+      <span class="top-author"><b>Santiago García</b></span>
+      <div class="top-counter" id="top-counter">Diapositiva 1 / 11</div>
+    </div>
   </header>
 
   <main class="slides">
@@ -357,24 +370,28 @@
               <button type="button" class="btn primary" id="start-btn">Comenzar exposición técnica →</button>
             </p>
             <p style="font-size:12px; color:var(--muted); margin-top:8px;">
-              Diapositivas 100% autónomas. Navega con las teclas ← y → del teclado.
+              Diapositivas 100% autónomas. Navega con las flechas ← y → del teclado.
             </p>
           </div>
           <div>
             <div class="card" style="box-shadow: 0 10px 25px -5px rgba(0,0,0,0.06);">
-              <h3 style="border-bottom:1px solid #f1f5f9; padding-bottom:10px; margin-bottom:12px;">Equipo de Trabajo</h3>
+              <h3 style="border-bottom:1px solid #f1f5f9; padding-bottom:10px; margin-bottom:12px;">Ficha Técnica</h3>
               <table style="width:100%; font-size:13px; line-height:1.8;">
                 <tr>
-                  <td>👤 <b>Santiago García</b></td>
-                  <td style="color:var(--muted); text-align:right;">Reparación e Imputación</td>
+                  <td>👤 <b>Expositor:</b></td>
+                  <td style="color:var(--ink); font-weight:700; text-align:right;">Santiago García</td>
                 </tr>
                 <tr>
-                  <td>👤 <b>Juan Esteban Gómez</b></td>
-                  <td style="color:var(--muted); text-align:right;">Dinámica Temporal y Retraso</td>
+                  <td>📚 <b>Asignatura:</b></td>
+                  <td style="color:var(--muted); text-align:right;">Programación Científica</td>
                 </tr>
                 <tr>
-                  <td>👤 <b>Santiago Galvis</b></td>
-                  <td style="color:var(--muted); text-align:right;">Modelos y Evaluación</td>
+                  <td>📅 <b>Periodo:</b></td>
+                  <td style="color:var(--muted); text-align:right;">2026-2</td>
+                </tr>
+                <tr>
+                  <td>⏱️ <b>Duración estimada:</b></td>
+                  <td style="color:var(--muted); text-align:right;">6 a 8 minutos</td>
                 </tr>
               </table>
               <div class="card alert" style="margin-top:14px; padding:12px; font-size:12px; line-height:1.5;">
@@ -848,7 +865,7 @@
         <p class="kicker"><span class="badge">Síntesis</span> Evaluación Final</p>
         <h2>Conclusiones del Quinto Parcial y Recomendaciones.</h2>
         <p class="lede">
-          Integración de hallazgos del grupo en salud pública computacional:
+          Integración de hallazgos en salud pública computacional:
         </p>
 
         <button type="button" class="qa"><b>1. Reparación Rigurosa: ¿Por qué no eliminar los datos con faltantes?</b> <span>+</span></button>
@@ -866,12 +883,13 @@
           Ante un desbalance del 80/20, un modelo inútil que prediga que nadie se hospitaliza obtiene 80% de Accuracy. El verdadero valor científico se mide en ROC-AUC (0.826) y PR-AUC (0.602), demostrando capacidad genuina para encender alertas tempranas de internación.
         </div>
 
-        <button type="button" class="qa"><b>4. Organización del Video Grupal (6 a 10 minutos)</b> <span>+</span></button>
+        <button type="button" class="qa"><b>4. Hoja de Ruta de la Exposición (6 a 10 minutos)</b> <span>+</span></button>
         <div class="answer">
-          Grabación secuencial sobre este HTML:<br>
-          • <b>Santiago García (0:00 - 2:30):</b> Portada, lectura I/O, parseo semántico, auditoría de imposibles y método de imputación.<br>
-          • <b>Juan Esteban Gómez (2:30 - 5:30):</b> Dinámica temporal, choque COVID-19 (-17.5%), retraso diagnóstico y lectura crítica de gráficos.<br>
-          • <b>Santiago Galvis (5:30 - 8:30):</b> Formulación de $y$, control de fuga en $X$, comparación con el Baseline Nulo, métricas ROC-AUC y límites del modelo.
+          Secuencia de exposición individual por Santiago García:<br>
+          • <b>0:00 - 2:00:</b> Portada, justificación del problema, lectura controlada I/O y parseo semántico.<br>
+          • <b>2:00 - 4:00:</b> Auditoría de duplicados e imposibles, decisiones por variable y preservación de varianza.<br>
+          • <b>4:00 - 6:30:</b> Explicación de las 3 figuras (Pandemia, Retraso, Hospitalización) con cifras y límites.<br>
+          • <b>6:30 - 9:00:</b> Modelo predictivo: formulación de $y$, control de fuga en $X$, métricas vs. Dummy y límites clínicos.
         </div>
       </div>
     </section>
@@ -889,7 +907,7 @@
 <script>
 // ==========================================
 // CONTROLADOR DE DIAPOSITIVAS Y NAVEGACIÓN
-// Quinto Parcial · Periodo 2026-2
+// Quinto Parcial · Santiago García (2026-2)
 // ==========================================
 
 let slideIndex = 0;
